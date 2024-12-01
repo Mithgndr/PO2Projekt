@@ -1,0 +1,29 @@
+{
+  "uzytkownicy": [
+    {
+      "imie": "Filip",
+      "nazwisko": "Bednarz",
+      "nrKarty": "1000",
+      "haslo": "test",
+      "wypozyczoneKsiazki": []
+    },
+    {
+      "imie": "Natalia",
+      "nazwisko": "Błach",
+      "nrKarty": "1001",
+      "haslo": "testyy",
+      "wypozyczoneKsiazki": []
+    }
+  ],
+  "ksiazki": [
+    {
+      "tytul": "Pan Tadeusz",
+      "autor": "Adam Mieckiewicz",
+      "czyDostepna": true,
+      "czyZarezerwowana": false,
+      "kategoria": "Poemat",
+      "okladka": ""
+    }
+  ],
+  "nextNrKarty": 1002
+}

@@ -1,23 +1,24 @@
 package ProjektPO2;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Ksiazka {
+public class Ksiazka implements Serializable {
     private String tytul;
     private String autor;
     private boolean czyDostepna;
     private Date niedostepnaDo;
     private boolean czyZarezerwowana;
-    private String opis;
+    private String kategoria;
     private String okladka;
 
-    public Ksiazka(String tytul, String autor, boolean czyDostepna, Date niedostepnaDo, boolean czyZarezerwowana, String opis, String okladka) {
+    public Ksiazka(String tytul, String autor, boolean czyDostepna, Date niedostepnaDo, boolean czyZarezerwowana, String kategoria, String okladka) {
         this.tytul = tytul;
         this.autor = autor;
         this.czyDostepna = czyDostepna;
         this.niedostepnaDo = niedostepnaDo;
         this.czyZarezerwowana = czyZarezerwowana;
-        this.opis = opis;
+        this.kategoria = kategoria;
         this.okladka = okladka;
     }
 
@@ -26,7 +27,7 @@ public class Ksiazka {
     public boolean getCzydostepna() {return czyDostepna;}
     public Date getNiedostepnaDo() { return niedostepnaDo; }
     public boolean getCzyZarezerwowana() {return czyZarezerwowana;}
-    public String getOpis() {return tytul;}
+    public String getKategoria() {return kategoria;}
     public String getOkladka() {return okladka;}
 
     public void ustawDostepnosc(boolean dostepna, Date dostepnaOd) {
@@ -42,7 +43,7 @@ public class Ksiazka {
                 ", czyDostępna: " + czyDostepna + '\'' +
                 ", niedostepnaDo: " + niedostepnaDo + '\'' +
                 ", czyZarezerwowana: " + czyZarezerwowana + '\'' +
-                ", opis: " + opis + '\'' +
+                ", kategoria: " + kategoria + '\'' +
                 ", okladka: " + okladka + '\'' + '}';
 
     }
