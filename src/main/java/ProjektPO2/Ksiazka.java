@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Ksiazka implements Serializable {
-    private String tytul;
-    private String autor;
+    private final String tytul;
+    private final String autor;
     private boolean czyDostepna;
     private Date niedostepnaDo;
     private boolean czyZarezerwowana;
-    private String kategoria;
-    private String okladka;
+    private final String kategoria;
+    private final String okladka;
 
     public Ksiazka(String tytul, String autor, boolean czyDostepna, Date niedostepnaDo, boolean czyZarezerwowana, String kategoria, String okladka) {
         this.tytul = tytul;
@@ -30,9 +30,10 @@ public class Ksiazka implements Serializable {
     public String getKategoria() {return kategoria;}
     public String getOkladka() {return okladka;}
 
-    public void ustawDostepnosc(boolean dostepna, Date dostepnaOd) {
+    public void ustawDostepnosc(boolean dostepna, Date dostepnaOd, boolean czyZarezerwowana) {
         this.czyDostepna = dostepna;
         this.niedostepnaDo = dostepnaOd;
+        this.czyZarezerwowana = czyZarezerwowana;
     }
 
     @Override

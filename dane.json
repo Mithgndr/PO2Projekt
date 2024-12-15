@@ -1,0 +1,40 @@
+{
+  "uzytkownicy": [
+    {
+      "imie": "Filip",
+      "nazwisko": "Bednarz",
+      "nrKarty": "1000",
+      "haslo": "admin",
+      "wypozyczoneKsiazki": [],
+      "zarezerwowaneKsiazki": [
+        {
+          "tytul": "Pan Tadeusz",
+          "autor": "Adam Mickiewicz",
+          "czyDostepna": true,
+          "czyZarezerwowana": true,
+          "kategoria": "Poemat",
+          "okladka": ""
+        }
+      ]
+    },
+    {
+      "imie": "Jan",
+      "nazwisko": "Kowalski",
+      "nrKarty": "1001",
+      "haslo": "Test",
+      "wypozyczoneKsiazki": [],
+      "zarezerwowaneKsiazki": []
+    }
+  ],
+  "ksiazki": [
+    {
+      "tytul": "Pan Tadeusz",
+      "autor": "Adam Mickiewicz",
+      "czyDostepna": true,
+      "czyZarezerwowana": true,
+      "kategoria": "Poemat",
+      "okladka": ""
+    }
+  ],
+  "nextNrKarty": 1002
+}

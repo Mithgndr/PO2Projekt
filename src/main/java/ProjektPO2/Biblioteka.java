@@ -56,7 +56,7 @@ public class Biblioteka {
 
         if(uzytkownik != null && ksiazka != null) {
             if(ksiazka.getCzydostepna()) {
-                ksiazka.ustawDostepnosc(false, new Date());
+                ksiazka.ustawDostepnosc(false, new Date(), true);
                 uzytkownik.wypozyczKsiazke(ksiazka);
                 System.out.println("Książka: " + tytul + "została wypożyczona przez użytkownika: " + nrKarty);
                 return true;
@@ -76,7 +76,7 @@ public class Biblioteka {
 
         if(uzytkownik != null && ksiazka != null) {
             if(uzytkownik.getWypozyczoneKsiazki().contains(ksiazka)) {
-                ksiazka.ustawDostepnosc(true, null);
+                ksiazka.ustawDostepnosc(true, null, false);
                 uzytkownik.getWypozyczoneKsiazki().remove(ksiazka);
                 System.out.println("Książka: " + tytul + "została zwrócona");
                 return true;
@@ -96,8 +96,9 @@ public class Biblioteka {
 
         if(uzytkownik != null && ksiazka != null) {
             if(!ksiazka.getCzyZarezerwowana()) {
-                ksiazka.ustawDostepnosc(false, null);
+                ksiazka.ustawDostepnosc(true, null, true);
                 uzytkownik.getWypozyczoneKsiazki().remove(ksiazka);
+                uzytkownik.getZarezerwowaneKsiazki().add(ksiazka);
                 System.out.println("Książka: " + tytul + "została zarezerwowana przez użytkownika: " + nrKarty);
                 return true;
             } else {
@@ -146,10 +147,14 @@ public class Biblioteka {
         }
     }
 
-    private static class BibliotekaData {
-        private ArrayList<Uzytkownik> uzytkownicy;
-        private ArrayList<Ksiazka> ksiazki;
-        private int nextNrKarty;
+    public ArrayList<Ksiazka> getKsiazki() { return ksiazki; }
+    public ArrayList<Uzytkownik> getUzytkownicy() { return uzytkownicy; }
+    public static int getNextNumerKarty() { return nextNumerKarty; }
+
+    public static class BibliotekaData {
+        private final ArrayList<Uzytkownik> uzytkownicy;
+        private final ArrayList<Ksiazka> ksiazki;
+        private final int nextNrKarty;
 
         public BibliotekaData(ArrayList<Uzytkownik> uzytkownicy, ArrayList<Ksiazka> ksiazki, int nextNrKarty) {
             this.uzytkownicy = uzytkownicy;
