@@ -1,37 +1,46 @@
 {
   "uzytkownicy": [
     {
-      "imie": "Filip",
-      "nazwisko": "Bednarz",
+      "imie": "Natalia",
+      "nazwisko": "Blach",
       "nrKarty": "1000",
       "haslo": "admin",
+      "rola": "BIBLIOTEKARZ",
+      "wypozyczoneKsiazki": [],
+      "zarezerwowaneKsiazki": []
+    },
+    {
+      "imie": "Ala",
+      "nazwisko": "Kowalska",
+      "nrKarty": "1001",
+      "haslo": "czytel",
+      "rola": "CZYTELNIK",
       "wypozyczoneKsiazki": [],
       "zarezerwowaneKsiazki": [
         {
-          "tytul": "Pan Tadeusz",
-          "autor": "Adam Mickiewicz",
-          "czyDostepna": true,
+          "tytul": "Lalka",
+          "autor": "Bolesław Prus",
+          "czyDostepna": false,
           "czyZarezerwowana": true,
-          "kategoria": "Poemat"
+          "kategoria": "powieść"
         }
       ]
-    },
-    {
-      "imie": "Jan",
-      "nazwisko": "Kowalski",
-      "nrKarty": "1001",
-      "haslo": "Test",
-      "wypozyczoneKsiazki": [],
-      "zarezerwowaneKsiazki": []
     }
   ],
   "ksiazki": [
     {
+      "tytul": "Lalka",
+      "autor": "Bolesław Prus",
+      "czyDostepna": false,
+      "czyZarezerwowana": true,
+      "kategoria": "powieść"
+    },
+    {
       "tytul": "Pan Tadeusz",
       "autor": "Adam Mickiewicz",
       "czyDostepna": true,
-      "czyZarezerwowana": true,
-      "kategoria": "Poemat"
+      "czyZarezerwowana": false,
+      "kategoria": "powiesc"
     }
   ],
   "nextNrKarty": 1002

@@ -27,7 +27,7 @@ public class LoginGUI {
     }
 
     private void initLoginGUI() {
-        JFrame loginFrame = new JFrame("System zarządzania biblioteką");
+        JFrame loginFrame = new JFrame("Login");
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setSize(400, 200);
         loginFrame.setLocation(screenWidth / 2 - 200, screenHeight / 2 - 100);
@@ -69,7 +69,7 @@ public class LoginGUI {
     }
 
 
-    public Uzytkownik getAktywnyUzytkownik() {
+   public Uzytkownik getAktywnyUzytkownik() {
         return aktywnyUzytkownik;
     }
 
