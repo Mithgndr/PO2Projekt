@@ -118,7 +118,7 @@ public class BibliotekaGUI {
             String tytul = tytulField.getText();
             String autor = autorField.getText();
             String kategoria = kategoriaField.getText();
-            Ksiazka ksiazka = new Ksiazka(tytul, autor, true, null, false, kategoria, null);
+            Ksiazka ksiazka = new Ksiazka(tytul + autor + true + false + kategoria);
             biblioteka.dodajKsiazke(ksiazka);
             JOptionPane.showMessageDialog(null, "Dodano książkę!");
         }
@@ -167,9 +167,4 @@ public class BibliotekaGUI {
             }
         }
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new BibliotekaGUI());
-    }
-
 }

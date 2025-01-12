@@ -12,8 +12,7 @@
           "autor": "Adam Mickiewicz",
           "czyDostepna": true,
           "czyZarezerwowana": true,
-          "kategoria": "Poemat",
-          "okladka": ""
+          "kategoria": "Poemat"
         }
       ]
     },
@@ -32,8 +31,7 @@
       "autor": "Adam Mickiewicz",
       "czyDostepna": true,
       "czyZarezerwowana": true,
-      "kategoria": "Poemat",
-      "okladka": ""
+      "kategoria": "Poemat"
     }
   ],
   "nextNrKarty": 1002

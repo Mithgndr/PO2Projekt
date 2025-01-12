@@ -82,7 +82,7 @@ public class Main {
         System.out.println("Podaj ścieżkę do pliku okładki: ");
         String okladka = scanner.nextLine();
 
-        Ksiazka ksiazka = new Ksiazka(tytul, autor, true, null, false, kategoria, okladka);
+        Ksiazka ksiazka = new Ksiazka(tytul + autor + true + false + kategoria);
         biblioteka.dodajKsiazke(ksiazka);
         System.out.println("Dodano ksiązkę: " + ksiazka);
     }

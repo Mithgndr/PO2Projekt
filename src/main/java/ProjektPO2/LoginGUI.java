@@ -25,7 +25,7 @@ public class LoginGUI {
         initLoginGUI();
     }
     private void initLoginGUI() {
-        JFrame loginFrame = new JFrame("Login");
+        JFrame loginFrame = new JFrame("System zarządzania biblioteką");
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setSize(400, 200);
         loginFrame.setLocation(screenWidth/2 - 200, screenHight/2 - 100);

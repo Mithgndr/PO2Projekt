@@ -1,11 +1,9 @@
 package ProjektPO2;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.io.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 
 public class Biblioteka {
@@ -56,7 +54,7 @@ public class Biblioteka {
 
         if(uzytkownik != null && ksiazka != null) {
             if(ksiazka.getCzydostepna()) {
-                ksiazka.ustawDostepnosc(false, new Date(), true);
+                ksiazka.ustawDostepnosc(false, true);
                 uzytkownik.wypozyczKsiazke(ksiazka);
                 System.out.println("Książka: " + tytul + "została wypożyczona przez użytkownika: " + nrKarty);
                 return true;
@@ -76,7 +74,7 @@ public class Biblioteka {
 
         if(uzytkownik != null && ksiazka != null) {
             if(uzytkownik.getWypozyczoneKsiazki().contains(ksiazka)) {
-                ksiazka.ustawDostepnosc(true, null, false);
+                ksiazka.ustawDostepnosc(true, false);
                 uzytkownik.getWypozyczoneKsiazki().remove(ksiazka);
                 System.out.println("Książka: " + tytul + "została zwrócona");
                 return true;
@@ -96,7 +94,7 @@ public class Biblioteka {
 
         if(uzytkownik != null && ksiazka != null) {
             if(!ksiazka.getCzyZarezerwowana()) {
-                ksiazka.ustawDostepnosc(true, null, true);
+                ksiazka.ustawDostepnosc(true,  true);
                 uzytkownik.getWypozyczoneKsiazki().remove(ksiazka);
                 uzytkownik.getZarezerwowaneKsiazki().add(ksiazka);
                 System.out.println("Książka: " + tytul + "została zarezerwowana przez użytkownika: " + nrKarty);
