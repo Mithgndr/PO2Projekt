@@ -21,6 +21,7 @@ public class Main {
             System.out.println("7. Wyświetl książki");
             System.out.println("8. Zapisz do pliku");
             System.out.println("9. Wczytaj z pliku");
+            System.out.println("10. Usuń użytkownika");
 
             int opcja = scanner.nextInt();
             scanner.nextLine();
@@ -37,8 +38,16 @@ public class Main {
                     String nazwisko = scanner.nextLine();
                     System.out.println("Podaj hasło: ");
                     String haslo = scanner.nextLine();
-                    biblioteka.dodajUzytkownika(imie, nazwisko, haslo);
-                    System.out.println("Dodano uzytkownika: " + imie + " " + nazwisko);
+                    System.out.println("Wybierz rolę: ");
+                    System.out.println("1. Czytelnik");
+                    System.out.println("2. Bibliotekarz");
+                    System.out.println("Rola: ");
+                    int rolaOpcja = scanner.nextInt();
+                    scanner.nextLine();
+                    Rola rola = (rolaOpcja == 1) ? Rola.CZYTELNIK : Rola.BIBLIOTEKARZ;
+
+                    biblioteka.dodajUzytkownika(imie, nazwisko, haslo, rola);
+                    System.out.println("Dodano użytkownika: " + imie + " " + nazwisko + " z rolą: " + rola);
                     break;
                 case 2:
                     dodajKsiazke(biblioteka, scanner);
@@ -68,6 +77,16 @@ public class Main {
                     String sciezkaWczytania = scanner.nextLine();
                     biblioteka.wczytajZPliku(sciezkaWczytania);
                     break;
+                case 10:
+                    System.out.println("Podaj numer karty użytkownika do usunięcia: ");
+                    String nrKartyUsuniecie = scanner.nextLine();
+                    boolean usunieto = biblioteka.usunUzytkownika(nrKartyUsuniecie);
+                    if(usunieto) {
+                        System.out.println("Użytkownik został usunięty.");
+                    } else {
+                        System.out.println("Nie udało się usunąć użytkownika.");
+                    }
+                    break;
             }
         }
     }
@@ -82,7 +101,7 @@ public class Main {
         System.out.println("Podaj ścieżkę do pliku okładki: ");
         String okladka = scanner.nextLine();
 
-        Ksiazka ksiazka = new Ksiazka(tytul, autor, true, null, false, kategoria, okladka);
+        Ksiazka ksiazka = new Ksiazka(tytul, autor, true, null, false, kategoria);
         biblioteka.dodajKsiazke(ksiazka);
         System.out.println("Dodano ksiązkę: " + ksiazka);
     }

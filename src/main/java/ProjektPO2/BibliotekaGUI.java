@@ -1,11 +1,9 @@
 package ProjektPO2;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
 
 public class BibliotekaGUI {
 
@@ -16,6 +14,7 @@ public class BibliotekaGUI {
     private JButton btnWyswietlKsiazki;
     private JButton btnZwrocKsiazke;
     private JButton btnWyswietlUzytkownikow;
+    private JButton btnUsunUzytkownika;
     private Biblioteka biblioteka = new Biblioteka();
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private int screenWidth = screenSize.width;
@@ -40,6 +39,12 @@ public class BibliotekaGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dodajUzytkownikaDialog();
+            }
+        });
+        btnUsunUzytkownika.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usunUzytkownikaDialog();
             }
         });
 
@@ -86,10 +91,15 @@ public class BibliotekaGUI {
         JTextField nazwiskoField = new JTextField();
         JTextField hasloField = new JTextField();
 
+        String[] role = { "Czytelnik", "Bibliotekarz" };
+        JComboBox<String> rolaComboBox = new JComboBox<>(role);
+
         Object[] fields = {
                 "Imię:", imieField,
                 "Nazwisko:", nazwiskoField,
-                "Hasło:", hasloField
+                "Hasło:", hasloField,
+                "Rola: ", rolaComboBox
+
         };
 
         int option = JOptionPane.showConfirmDialog(null, fields, "Dodaj użytkownika", JOptionPane.OK_CANCEL_OPTION);
@@ -97,10 +107,49 @@ public class BibliotekaGUI {
             String imie = imieField.getText();
             String nazwisko = nazwiskoField.getText();
             String haslo = hasloField.getText();
-            biblioteka.dodajUzytkownika(imie, nazwisko, haslo);
+            String rolaStr = (String) rolaComboBox.getSelectedItem();
+            if (imie.isEmpty() || nazwisko.isEmpty() || haslo.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Wszystkie pola muszą być wypełnione!",
+                        "Błąd",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+            Rola rola = (rolaStr.equals("Czytelnik")) ? Rola.CZYTELNIK : Rola.BIBLIOTEKARZ;
+            biblioteka.dodajUzytkownika(imie, nazwisko, haslo,rola);
             JOptionPane.showMessageDialog(null, "Dodano użytkownika!");
+            System.out.print("Dodano uzytkownika " + imie +" "+ nazwisko + " z rolą: " + rola + "\n");
         }
+        biblioteka.zapiszDoPliku("dane.json");
     }
+    private void usunUzytkownikaDialog() {
+        JTextField nrKartyField = new JTextField();
+
+        Object[] fields = {
+                "Numer karty użytkownika:", nrKartyField
+        };
+
+        int option = JOptionPane.showConfirmDialog(null, fields, "Usuń użytkownika", JOptionPane.OK_CANCEL_OPTION);
+        if (option == JOptionPane.OK_OPTION) {
+            String nrKarty = nrKartyField.getText();
+            if (nrKarty.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Pole numeru karty nie może być puste!",
+                        "Błąd",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+            biblioteka.usunUzytkownika(nrKarty);
+            JOptionPane.showMessageDialog(null, "Usunieto użytkownika!");
+            System.out.print("Usunieto uzytkownika"+ nrKarty);
+        }
+        biblioteka.zapiszDoPliku("dane.json");
+    }
+
 
     private void dodajKsiazkeDialog() {
         JTextField tytulField = new JTextField();
@@ -118,9 +167,10 @@ public class BibliotekaGUI {
             String tytul = tytulField.getText();
             String autor = autorField.getText();
             String kategoria = kategoriaField.getText();
-            Ksiazka ksiazka = new Ksiazka(tytul, autor, true, null, false, kategoria, null);
+            Ksiazka ksiazka = new Ksiazka(tytul, autor, true, null, false, kategoria);
             biblioteka.dodajKsiazke(ksiazka);
             JOptionPane.showMessageDialog(null, "Dodano książkę!");
+            biblioteka.zapiszDoPliku("dane.json");
         }
     }
 
@@ -143,6 +193,7 @@ public class BibliotekaGUI {
             } else {
                 JOptionPane.showMessageDialog(null, "Nie udało się wypożyczyć książki.");
             }
+            biblioteka.zapiszDoPliku("dane.json");
         }
     }
 
@@ -165,6 +216,7 @@ public class BibliotekaGUI {
             } else {
                 JOptionPane.showMessageDialog(null, "Nie udało się zwrócić książki.");
             }
+            biblioteka.zapiszDoPliku("dane.json");
         }
     }
 

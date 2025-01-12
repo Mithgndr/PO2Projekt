@@ -3,6 +3,8 @@ package ProjektPO2;
 import java.util.ArrayList;
 import java.util.Date;
 import java.io.*;
+import java.util.List;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -17,14 +19,35 @@ public class Biblioteka {
         this.uzytkownicy = new ArrayList<>();
         this.ksiazki = new ArrayList<>();
     }
+    public List<Ksiazka> getZarezerwowaneKsiazki(String login) {
+        Uzytkownik uzytkownik = znajdzUzytkownika(login);
+        if (uzytkownik != null) {
+            return uzytkownik.getZarezerwowaneKsiazki();
+        }
+        return new ArrayList<>();
+    }
+    public List<Ksiazka> getWypozyczoneKsiazki(String login) {
+        Uzytkownik uzytkownik = znajdzUzytkownika(login);
+        if (uzytkownik != null) {
+            return uzytkownik.getWypozyczoneKsiazki();
+        }
+        return new ArrayList<>();
+    }
 
     private String generujNrKarty() {
         return String.valueOf(nextNumerKarty++);
     }
 
-    public void dodajUzytkownika(String imie, String nazwisko, String haslo) {
+    public void dodajUzytkownika(String imie, String nazwisko, String haslo, Rola rola) {
         String nrKarty = generujNrKarty();
-        Uzytkownik uzytkownik = new Uzytkownik(imie, nazwisko, nrKarty, haslo);
+        Uzytkownik uzytkownik;
+
+        if (rola == Rola.CZYTELNIK) {
+            uzytkownik = new Czytelnik(imie, nazwisko, nrKarty, haslo);
+        } else {
+            uzytkownik = new Bibliotekarz(imie, nazwisko, nrKarty, haslo);
+        }
+
         uzytkownicy.add(uzytkownik);
     }
 
@@ -38,6 +61,7 @@ public class Biblioteka {
                 return u;
             }
         }
+        System.out.println("Użytkownik o numerze karty " + nrKarty + " nie został znaleziony.");
         return null;
     }
 
@@ -89,20 +113,29 @@ public class Biblioteka {
             return false;
         }
     }
+    public String wyswietlDostepneKsiazki() {
+        StringBuilder sb = new StringBuilder();
+        for (Ksiazka k : ksiazki) {
+            if (k.getCzydostepna()) {
+                sb.append(k.getTytul()).append(" - ").append(k.getAutor()).append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
 
     public boolean zarezerwujKsiazke(String nrKarty, String tytul){
         Uzytkownik uzytkownik = znajdzUzytkownika(nrKarty);
         Ksiazka ksiazka =znajdzKsiazke(tytul);
 
-        if(uzytkownik != null && ksiazka != null) {
-            if(!ksiazka.getCzyZarezerwowana()) {
-                ksiazka.ustawDostepnosc(true, null, true);
-                uzytkownik.getWypozyczoneKsiazki().remove(ksiazka);
+        if (uzytkownik != null && ksiazka != null) {
+            if (ksiazka.getCzydostepna() && !ksiazka.getCzyZarezerwowana()) {
+                ksiazka.ustawDostepnosc(false, null, true); // Zmieniamy dostępność na niedostępną
                 uzytkownik.getZarezerwowaneKsiazki().add(ksiazka);
-                System.out.println("Książka: " + tytul + "została zarezerwowana przez użytkownika: " + nrKarty);
+                System.out.println("Książka: " + tytul + " została zarezerwowana przez użytkownika: " + nrKarty);
                 return true;
             } else {
-                System.out.println("Książka: " + ksiazka + "jest zarezerwowana");
+                System.out.println("Książka: " + tytul + " jest już niedostępna lub zarezerwowana.");
                 return false;
             }
         } else {
@@ -150,6 +183,19 @@ public class Biblioteka {
     public ArrayList<Ksiazka> getKsiazki() { return ksiazki; }
     public ArrayList<Uzytkownik> getUzytkownicy() { return uzytkownicy; }
     public static int getNextNumerKarty() { return nextNumerKarty; }
+
+    public boolean usunUzytkownika(String nrKarty) {
+
+        Uzytkownik uzytkownik = znajdzUzytkownika(nrKarty);
+        if(uzytkownik != null) {
+            uzytkownicy.remove(uzytkownik);
+            System.out.println("Użytkownik o numerze karty " + nrKarty + " został usunięty.");
+            return true;
+        } else {
+            System.out.println("Użytkownik o numerze karty " + nrKarty + " nie został znaleziony.");
+            return false;
+        }
+    }
 
     public static class BibliotekaData {
         private final ArrayList<Uzytkownik> uzytkownicy;

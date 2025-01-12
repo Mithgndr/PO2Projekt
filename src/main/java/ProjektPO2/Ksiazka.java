@@ -10,16 +10,23 @@ public class Ksiazka implements Serializable {
     private Date niedostepnaDo;
     private boolean czyZarezerwowana;
     private final String kategoria;
-    private final String okladka;
 
-    public Ksiazka(String tytul, String autor, boolean czyDostepna, Date niedostepnaDo, boolean czyZarezerwowana, String kategoria, String okladka) {
+    public Ksiazka(){
+        this.tytul="";
+        this.autor="";
+        this.czyDostepna = false;
+        this.niedostepnaDo = null;
+        this.czyZarezerwowana = false;
+        this.kategoria = "";
+    }
+    public Ksiazka(String tytul, String autor, boolean czyDostepna, Date niedostepnaDo, boolean czyZarezerwowana, String kategoria) {
         this.tytul = tytul;
         this.autor = autor;
         this.czyDostepna = czyDostepna;
         this.niedostepnaDo = niedostepnaDo;
         this.czyZarezerwowana = czyZarezerwowana;
         this.kategoria = kategoria;
-        this.okladka = okladka;
+
     }
 
     public String getTytul() {return tytul;}
@@ -28,7 +35,7 @@ public class Ksiazka implements Serializable {
     public Date getNiedostepnaDo() { return niedostepnaDo; }
     public boolean getCzyZarezerwowana() {return czyZarezerwowana;}
     public String getKategoria() {return kategoria;}
-    public String getOkladka() {return okladka;}
+
 
     public void ustawDostepnosc(boolean dostepna, Date dostepnaOd, boolean czyZarezerwowana) {
         this.czyDostepna = dostepna;
@@ -44,8 +51,20 @@ public class Ksiazka implements Serializable {
                 ", czyDostępna: " + czyDostepna + '\'' +
                 ", niedostepnaDo: " + niedostepnaDo + '\'' +
                 ", czyZarezerwowana: " + czyZarezerwowana + '\'' +
-                ", kategoria: " + kategoria + '\'' +
-                ", okladka: " + okladka + '\'' + '}';
+                ", kategoria: " + kategoria + '\'';
 
+
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Ksiazka ksiazka = (Ksiazka) obj;
+        return tytul.equals(ksiazka.tytul);
+    }
+
+    @Override
+    public int hashCode() {
+        return tytul.hashCode();
     }
 }
