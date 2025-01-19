@@ -11,12 +11,10 @@ public class BibliotekaGUI {
 
     private JPanel Panel1;
     private JButton btnDodajUzytkownika;
-    private JButton btnDodajKsiazke;
-    private JButton btnWypozyczKsiazke;
-    private JButton btnWyswietlKsiazki;
-    private JButton btnZwrocKsiazke;
-    private JButton btnWyswietlUzytkownikow;
     private JButton btnUsunUzytkownika;
+    private JButton btnDodajKsiazke;
+    private JButton btnWyswietlKsiazki;
+    private JButton btnWyswietlUzytkownikow;
     private Biblioteka biblioteka = new Biblioteka();
     private Uzytkownik uzytkownik;
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -31,11 +29,19 @@ public class BibliotekaGUI {
 
     private void initGUI(Uzytkownik uzytkownik) {
         JFrame frame = new JFrame("System Zarządzania Biblioteką");
+        Font font = new Font("Arial", Font.PLAIN, 20);
+        Font font_bold = new Font("Arial", Font.BOLD, 20);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 400);
-        frame.setLocation(screenWidth/2 - 300, screenHight/2 - 200);
+        frame.setSize(screenWidth/2, screenHight/2);
+        frame.setLocation(screenWidth/4, screenHight/4);
 
         frame.add(Panel1);
+        frame.setFont(font);
+        btnDodajUzytkownika.setFont(font_bold);
+        btnDodajKsiazke.setFont(font_bold);
+        btnWyswietlKsiazki.setFont(font_bold);
+        btnWyswietlUzytkownikow.setFont(font_bold);
+        btnUsunUzytkownika.setFont(font_bold);
         frame.setVisible(true);
 
         btnDodajUzytkownika.addActionListener(new ActionListener() {
@@ -58,25 +64,10 @@ public class BibliotekaGUI {
             }
         });
 
-        btnWypozyczKsiazke.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                wypozyczKsiazkeDialog();
-            }
-        });
-
-        btnZwrocKsiazke.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                zwrocKsiazkeDialog();
-            }
-        });
-
         btnWyswietlKsiazki.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                WyswietlKsiazkiGUI wyswietlKsiazkiGUI = new WyswietlKsiazkiGUI();
-                wyswietlKsiazkiGUI.wyswietlKsiazkiGUI(biblioteka, uzytkownik);
+                WyswietlKsiazkiGUI wyswietlKsiazkiGUI = new WyswietlKsiazkiGUI(biblioteka, uzytkownik);
             }
         });
 
@@ -146,9 +137,17 @@ public class BibliotekaGUI {
                 );
                 return;
             }
-            biblioteka.usunUzytkownika(nrKarty);
-            JOptionPane.showMessageDialog(null, "Usunieto użytkownika!");
-            System.out.print("Usunieto uzytkownika"+ nrKarty);
+            if(biblioteka.usunUzytkownika(nrKarty)) {
+                JOptionPane.showMessageDialog(null, "Usunieto użytkownika!");
+                System.out.print("Usunieto uzytkownika" + nrKarty);
+            } else {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Nie udało się usunąć użytkownika!",
+                        "Błąd",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
         }
         biblioteka.zapiszDoPliku("dane.json");
     }

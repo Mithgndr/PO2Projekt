@@ -21,6 +21,7 @@ public class Biblioteka {
         this.uzytkownicy = new ArrayList<>();
         this.ksiazki = new ArrayList<>();
     }
+
     public List<Ksiazka> getZarezerwowaneKsiazki(String login) {
         Uzytkownik uzytkownik = znajdzUzytkownika(login);
         if (uzytkownik != null) {
@@ -28,6 +29,7 @@ public class Biblioteka {
         }
         return new ArrayList<>();
     }
+
     public List<Ksiazka> getWypozyczoneKsiazki(String login) {
         Uzytkownik uzytkownik = znajdzUzytkownika(login);
         if (uzytkownik != null) {
@@ -35,6 +37,7 @@ public class Biblioteka {
         }
         return new ArrayList<>();
     }
+
 
     private String generujNrKarty() {
         return String.valueOf(nextNumerKarty++);
@@ -82,7 +85,7 @@ public class Biblioteka {
 
         if(uzytkownik != null && ksiazka != null) {
             if(ksiazka.getCzydostepna()) {
-                ksiazka.ustawDostepnosc(false, new Date(), true);
+                ksiazka.ustawDostepnosc(false, new Date(), false);
                 uzytkownik.wypozyczKsiazke(ksiazka);
                 System.out.println("Książka: " + tytul + "została wypożyczona przez użytkownika: " + nrKarty);
                 return true;
@@ -132,12 +135,32 @@ public class Biblioteka {
 
         if (uzytkownik != null && ksiazka != null) {
             if (ksiazka.getCzydostepna() && !ksiazka.getCzyZarezerwowana()) {
-                ksiazka.ustawDostepnosc(false, null, true); // Zmieniamy dostępność na niedostępną
+                ksiazka.ustawDostepnosc(true, null, true); // Zmieniamy dostępność na niedostępną
                 uzytkownik.getZarezerwowaneKsiazki().add(ksiazka);
                 System.out.println("Książka: " + tytul + " została zarezerwowana przez użytkownika: " + nrKarty);
                 return true;
             } else {
                 System.out.println("Książka: " + tytul + " jest już niedostępna lub zarezerwowana.");
+                return false;
+            }
+        } else {
+            System.out.println("Książka albo użytkownik nie został znaleziony");
+            return false;
+        }
+    }
+
+    public boolean anulujRezerwacjeKsiazki(String nrKarty, String tytul) {
+        Uzytkownik uzytkownik = znajdzUzytkownika(nrKarty);
+        Ksiazka ksiazka =znajdzKsiazke(tytul);
+
+        if (uzytkownik != null && ksiazka != null) {
+            if (ksiazka.getCzydostepna() && ksiazka.getCzyZarezerwowana()) {
+                ksiazka.ustawDostepnosc(true, null, false); // Zmieniamy dostępność na niedostępną
+                uzytkownik.getZarezerwowaneKsiazki().remove(ksiazka);
+                System.out.println("Rezerwacja książki: " + tytul + " została anulowana przez użytkownika: " + nrKarty);
+                return true;
+            } else {
+                System.out.println("Książka: " + tytul + " jest już dostępna lub niezarezerwowana.");
                 return false;
             }
         } else {
@@ -187,37 +210,18 @@ public class Biblioteka {
     public static int getNextNumerKarty() { return nextNumerKarty; }
 
     public boolean usunUzytkownika(String nrKarty) {
-
+        //Aby usunąć admina trzeba go ręcznie usunąć z pliku dane.json
         Uzytkownik uzytkownik = znajdzUzytkownika(nrKarty);
-        if(uzytkownik != null) {
+        if(uzytkownik != null && uzytkownik.getRola() != Rola.BIBLIOTEKARZ) {
             uzytkownicy.remove(uzytkownik);
-            System.out.println("Użytkownik o numerze karty " + nrKarty + " został usunięty.");
+            System.out.println("Czytelnik o numerze karty " + nrKarty + " został usunięty.");
             return true;
         } else {
-            System.out.println("Użytkownik o numerze karty " + nrKarty + " nie został znaleziony.");
+            System.out.println("Użytkownik o numerze karty " + nrKarty + " nie został znaleziony lub nie może zostać usunięty.");
             return false;
         }
     }
 
-    public boolean anulujRezerwacjeKsiazki(String nrKarty, String tytul) {
-        Uzytkownik uzytkownik = znajdzUzytkownika(nrKarty);
-        Ksiazka ksiazka =znajdzKsiazke(tytul);
-
-        if (uzytkownik != null && ksiazka != null) {
-            if (!ksiazka.getCzydostepna() && ksiazka.getCzyZarezerwowana()) {
-                ksiazka.ustawDostepnosc(true, null, false); // Zmieniamy dostępność na niedostępną
-                uzytkownik.getZarezerwowaneKsiazki().remove(ksiazka);
-                System.out.println("Rezerwacja książki: " + tytul + " została anulowana przez użytkownika: " + nrKarty);
-                return true;
-            } else {
-                System.out.println("Książka: " + tytul + " jest już dostępna lub niezarezerwowana.");
-                return false;
-            }
-        } else {
-            System.out.println("Książka albo użytkownik nie został znaleziony");
-            return false;
-        }
-    }
 
     public static class BibliotekaData {
         private final ArrayList<Uzytkownik> uzytkownicy;
