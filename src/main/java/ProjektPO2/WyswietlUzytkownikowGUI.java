@@ -1,5 +1,7 @@
 package ProjektPO2;
 
+import ProjektPO2.Users.Uzytkownik;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;

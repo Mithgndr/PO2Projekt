@@ -1,5 +1,7 @@
 package ProjektPO2;
 
+import ProjektPO2.Users.Uzytkownik;
+
 public class Sesja {
     private static Uzytkownik aktualnyUzytkownik;
 

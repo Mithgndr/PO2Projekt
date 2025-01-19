@@ -1,6 +1,0 @@
-- tabela z checkboxami do wypożyczania i rezerwowania książek
-- rozdzielenie admina i zwykłego usera
-- rodzielenie jsonów na użytkowników i książki
-- dodać ksiązka id
-- uzytkownik ma tylko id ksiązki
-- wyswietlanie uzytkownikow i wypozyczonych przez nich ksiazek wyswietla tylko tytuł i autora

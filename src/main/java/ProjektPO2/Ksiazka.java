@@ -1,5 +1,7 @@
 package ProjektPO2;
 
+import ProjektPO2.Users.Uzytkownik;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,6 +12,8 @@ public class Ksiazka implements Serializable {
     private Date niedostepnaDo;
     private boolean czyZarezerwowana;
     private final String kategoria;
+    private Biblioteka biblioteka;
+    private Uzytkownik uzytkownik;
 
     public Ksiazka(){
         this.tytul="";
@@ -19,6 +23,7 @@ public class Ksiazka implements Serializable {
         this.czyZarezerwowana = false;
         this.kategoria = "";
     }
+
     public Ksiazka(String tytul, String autor, boolean czyDostepna, Date niedostepnaDo, boolean czyZarezerwowana, String kategoria) {
         this.tytul = tytul;
         this.autor = autor;
@@ -36,12 +41,12 @@ public class Ksiazka implements Serializable {
     public boolean getCzyZarezerwowana() {return czyZarezerwowana;}
     public String getKategoria() {return kategoria;}
 
-
     public void ustawDostepnosc(boolean dostepna, Date dostepnaOd, boolean czyZarezerwowana) {
         this.czyDostepna = dostepna;
         this.niedostepnaDo = dostepnaOd;
         this.czyZarezerwowana = czyZarezerwowana;
     }
+
 
     @Override
     public String toString(){
@@ -55,6 +60,8 @@ public class Ksiazka implements Serializable {
 
 
     }
+
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -66,5 +73,22 @@ public class Ksiazka implements Serializable {
     @Override
     public int hashCode() {
         return tytul.hashCode();
+    }
+
+    public void setCzyZarezerwowana(boolean b) {
+        this.czyZarezerwowana = b;
+    }
+
+    public void setCzyDostepna(boolean b) {
+        this.czyDostepna = b;
+    }
+
+    public Object getUzytkownik() {
+        uzytkownik = biblioteka.znajdzUzytkownika(tytul);
+        return uzytkownik;
+    }
+
+    public void setUzytkownik(String currentUser) {
+        this.uzytkownik = biblioteka.znajdzUzytkownika(currentUser);
     }
 }

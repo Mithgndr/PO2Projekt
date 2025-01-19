@@ -15,11 +15,20 @@
       "nrKarty": "1001",
       "haslo": "czytel",
       "rola": "CZYTELNIK",
-      "wypozyczoneKsiazki": [],
-      "zarezerwowaneKsiazki": [
+      "wypozyczoneKsiazki": [
         {
           "tytul": "Lalka",
           "autor": "Bolesław Prus",
+          "czyDostepna": false,
+          "niedostepnaDo": "Jan 19, 2025, 3:00:54 PM",
+          "czyZarezerwowana": true,
+          "kategoria": "powieść"
+        }
+      ],
+      "zarezerwowaneKsiazki": [
+        {
+          "tytul": "Pan Tadeusz",
+          "autor": "Adam Mickiewicz",
           "czyDostepna": false,
           "czyZarezerwowana": true,
           "kategoria": "powieść"
@@ -32,16 +41,45 @@
       "tytul": "Lalka",
       "autor": "Bolesław Prus",
       "czyDostepna": false,
+      "niedostepnaDo": "Jan 19, 2025, 3:00:54 PM",
       "czyZarezerwowana": true,
       "kategoria": "powieść"
     },
     {
       "tytul": "Pan Tadeusz",
       "autor": "Adam Mickiewicz",
+      "czyDostepna": false,
+      "czyZarezerwowana": true,
+      "kategoria": "powieść"
+    },
+    {
+      "tytul": "Baśnie",
+      "autor": "Hans Christian Andersen",
       "czyDostepna": true,
       "czyZarezerwowana": false,
-      "kategoria": "powiesc"
+      "kategoria": "Baśnie"
+    },
+    {
+      "tytul": "Harry Potter i Kamień Dilozoficzny",
+      "autor": "J. K. Rowling",
+      "czyDostepna": true,
+      "czyZarezerwowana": false,
+      "kategoria": "Fantastyka"
+    },
+    {
+      "tytul": "Harry Potter i Komnata Tajemnic",
+      "autor": "J. K. Rowling",
+      "czyDostepna": true,
+      "czyZarezerwowana": false,
+      "kategoria": "Fantastyka"
+    },
+    {
+      "tytul": "Harry Potter i więzień Azkabanu",
+      "autor": "J. K. Rowling",
+      "czyDostepna": true,
+      "czyZarezerwowana": false,
+      "kategoria": "Fantastyka"
     }
   ],
-  "nextNrKarty": 1002
+  "nextNrKarty": 0
 }

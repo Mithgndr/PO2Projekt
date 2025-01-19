@@ -1,5 +1,7 @@
 package ProjektPO2;
 
+import ProjektPO2.Users.Uzytkownik;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -15,7 +17,6 @@ public class LoginGUI {
     private int screenHeight = screenSize.height;
     private Biblioteka biblioteka = new Biblioteka();
 
-
     private Uzytkownik aktywnyUzytkownik = null;
     public static void main(String[] args) {
         SwingUtilities.invokeLater(LoginGUI::new);
@@ -27,10 +28,19 @@ public class LoginGUI {
     }
 
     private void initLoginGUI() {
+        Font font = new Font("Arial", Font.BOLD, 24);
         JFrame loginFrame = new JFrame("System zarządzania biblioteką");
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setSize(400, 200);
         loginFrame.setLocation(screenWidth / 2 - 200, screenHeight / 2 - 100);
+
+        loginFrame.setFont(font);
+        loginPanel.setFont(font);
+        lblLogin.setFont(font);
+        lblPassword.setFont(font);
+        btnLogin.setFont(font);
+        txtLogin.setFont(font);
+        txtPassword.setFont(font);
 
         loginFrame.add(loginPanel);
         loginFrame.setVisible(true);
@@ -42,7 +52,7 @@ public class LoginGUI {
         txtPassword.addActionListener(e -> loginAction(loginFrame));
     }
 
-    private void loginAction(JFrame loginFrame) {
+    void loginAction(JFrame loginFrame) {
         String loginText = txtLogin.getText();
         String passwordText = new String(txtPassword.getPassword());
 
@@ -53,15 +63,17 @@ public class LoginGUI {
             System.out.println("Rola użytkownika: '" + rola + "'");
             if (rola == Rola.BIBLIOTEKARZ) {
                 loginFrame.dispose();
-                new BibliotekaGUI();
+                new BibliotekaGUI(uzytkownik);
             } else if (rola == Rola.CZYTELNIK) {
                 loginFrame.dispose();
                 new CzytelnikGUI(uzytkownik);
             } else {
                 JOptionPane.showMessageDialog(loginFrame, "Nieznana rola użytkownika.", "Błąd", JOptionPane.ERROR_MESSAGE);
+                txtPassword.setText("");
             }
         } else {
             JOptionPane.showMessageDialog(loginFrame, "Nieprawidłowe dane logowania", "Błąd", JOptionPane.ERROR_MESSAGE);
+            txtPassword.setText("");
         }
     }
     public boolean czyJestZalogowany() {

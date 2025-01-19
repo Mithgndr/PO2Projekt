@@ -1,5 +1,7 @@
 package ProjektPO2;
 
+import ProjektPO2.Users.Uzytkownik;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,17 +18,18 @@ public class BibliotekaGUI {
     private JButton btnWyswietlUzytkownikow;
     private JButton btnUsunUzytkownika;
     private Biblioteka biblioteka = new Biblioteka();
+    private Uzytkownik uzytkownik;
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private int screenWidth = screenSize.width;
     private int screenHight = screenSize.height;
 
-    public BibliotekaGUI() {
+    public BibliotekaGUI(Uzytkownik uzytkownik) {
         biblioteka.wczytajZPliku("dane.json");
-        initGUI();
+        initGUI(uzytkownik);
     }
 
 
-    private void initGUI() {
+    private void initGUI(Uzytkownik uzytkownik) {
         JFrame frame = new JFrame("System Zarządzania Biblioteką");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
@@ -73,7 +76,7 @@ public class BibliotekaGUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 WyswietlKsiazkiGUI wyswietlKsiazkiGUI = new WyswietlKsiazkiGUI();
-                wyswietlKsiazkiGUI.wyswietlKsiazkiGUI(biblioteka);
+                wyswietlKsiazkiGUI.wyswietlKsiazkiGUI(biblioteka, uzytkownik);
             }
         });
 
@@ -221,7 +224,7 @@ public class BibliotekaGUI {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new BibliotekaGUI());
+        SwingUtilities.invokeLater(() -> new BibliotekaGUI(new Uzytkownik()).initGUI(new Uzytkownik()));
     }
 
 }

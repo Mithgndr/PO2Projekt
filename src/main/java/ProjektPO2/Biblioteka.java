@@ -1,13 +1,15 @@
 package ProjektPO2;
 
+import ProjektPO2.Users.Bibliotekarz;
+import ProjektPO2.Users.Czytelnik;
+import ProjektPO2.Users.Uzytkownik;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.io.*;
 import java.util.List;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 
 public class Biblioteka {
@@ -193,6 +195,26 @@ public class Biblioteka {
             return true;
         } else {
             System.out.println("Użytkownik o numerze karty " + nrKarty + " nie został znaleziony.");
+            return false;
+        }
+    }
+
+    public boolean anulujRezerwacjeKsiazki(String nrKarty, String tytul) {
+        Uzytkownik uzytkownik = znajdzUzytkownika(nrKarty);
+        Ksiazka ksiazka =znajdzKsiazke(tytul);
+
+        if (uzytkownik != null && ksiazka != null) {
+            if (!ksiazka.getCzydostepna() && ksiazka.getCzyZarezerwowana()) {
+                ksiazka.ustawDostepnosc(true, null, false); // Zmieniamy dostępność na niedostępną
+                uzytkownik.getZarezerwowaneKsiazki().remove(ksiazka);
+                System.out.println("Rezerwacja książki: " + tytul + " została anulowana przez użytkownika: " + nrKarty);
+                return true;
+            } else {
+                System.out.println("Książka: " + tytul + " jest już dostępna lub niezarezerwowana.");
+                return false;
+            }
+        } else {
+            System.out.println("Książka albo użytkownik nie został znaleziony");
             return false;
         }
     }

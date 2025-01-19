@@ -1,9 +1,12 @@
-package ProjektPO2;
+package ProjektPO2.Users;
+
+import ProjektPO2.Ksiazka;
+import ProjektPO2.Rola;
 
 import java.util.ArrayList;
 import java.io.Serializable;
 
-public  class Uzytkownik implements Serializable{
+public class Uzytkownik implements Serializable{
     private String imie;
     private String nazwisko;
     private String nrKarty;
@@ -19,6 +22,12 @@ public  class Uzytkownik implements Serializable{
         this.haslo = "brak";
         this.rola = Rola.CZYTELNIK;
     }
+
+    public Uzytkownik(String nrKarty){
+        this.nrKarty = nrKarty;
+        
+    }
+
     public Uzytkownik(String imie, String nazwisko, String nrKarty, String haslo,Rola rola){
         this.imie = imie;
         this.nazwisko = nazwisko;
