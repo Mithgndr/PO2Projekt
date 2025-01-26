@@ -12,8 +12,8 @@ public class Uzytkownik implements Serializable{
     private String nrKarty;
     private String haslo;
     private Rola rola;
-    private ArrayList<Ksiazka> wypozyczoneKsiazki;
-    private ArrayList<Ksiazka> zarezerwowaneKsiazki;
+    private CustomArrayList<String> wypozyczoneKsiazki = new CustomArrayList<>();
+    private CustomArrayList<String> zarezerwowaneKsiazki = new CustomArrayList<>();
 
     public Uzytkownik() {
         this.imie = "Nieznane";
@@ -28,14 +28,23 @@ public class Uzytkownik implements Serializable{
         
     }
 
+    public Uzytkownik(String[] daneZServera){
+        this.imie = daneZServera[0];
+        this.nazwisko = daneZServera[1];
+        this.nrKarty = daneZServera[2];
+        this.rola = Rola.valueOf(daneZServera[3]);
+        this.wypozyczoneKsiazki = new CustomArrayList<>();
+        this.zarezerwowaneKsiazki = new CustomArrayList<>();
+    }
+
     public Uzytkownik(String imie, String nazwisko, String nrKarty, String haslo,Rola rola){
         this.imie = imie;
         this.nazwisko = nazwisko;
         this.nrKarty = nrKarty;
         this.haslo = haslo;
         this.rola = rola;
-        this.wypozyczoneKsiazki = new ArrayList<>();
-        this.zarezerwowaneKsiazki = new ArrayList<>();
+        this.wypozyczoneKsiazki = new CustomArrayList<>();
+        this.zarezerwowaneKsiazki = new CustomArrayList<>();
     }
 
     public String getImie() { return imie; }
@@ -43,14 +52,18 @@ public class Uzytkownik implements Serializable{
     public String getNrKarty() { return nrKarty; }
     public String getHaslo() { return haslo; }
     public Rola getRola() { return rola; }
-    public ArrayList<Ksiazka> getWypozyczoneKsiazki() { return wypozyczoneKsiazki; }
-    public ArrayList<Ksiazka> getZarezerwowaneKsiazki() { return zarezerwowaneKsiazki; }
+    public CustomArrayList<String> getWypozyczoneKsiazki() { return wypozyczoneKsiazki; }
+    public CustomArrayList<String> getZarezerwowaneKsiazki() { return zarezerwowaneKsiazki; }
     public void setRola(Rola rola) {
         this.rola = rola;
     }
 
-    public void wypozyczKsiazke(Ksiazka ksiazka){
-        wypozyczoneKsiazki.add(ksiazka);
+    public void wypozyczKsiazke(String tytul){
+        wypozyczoneKsiazki.add(tytul);
+    }
+
+    public void zarezerwujKsiazke(String tytul) {
+        zarezerwowaneKsiazki.add(tytul);
     }
 
     @Override
@@ -63,4 +76,14 @@ public class Uzytkownik implements Serializable{
                 ", wypozyczoneKsiazki: " + wypozyczoneKsiazki + '\'' +
                 ", zarezerwowaneKsiazki: " + zarezerwowaneKsiazki + "}";
     }
+
+    public String toStringServer(){
+        return  imie +
+                "#" + nazwisko +
+                "#" + nrKarty +
+                "#" + rola +
+                "#" + wypozyczoneKsiazki +
+                "#" + zarezerwowaneKsiazki;
+    }
+
 }

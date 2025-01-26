@@ -1,6 +1,7 @@
 package ProjektPO2;
 
 import ProjektPO2.Users.Bibliotekarz;
+import ProjektPO2.Users.CustomArrayList;
 import ProjektPO2.Users.Czytelnik;
 import ProjektPO2.Users.Uzytkownik;
 import com.google.gson.Gson;
@@ -13,29 +14,29 @@ import java.util.List;
 
 
 public class Biblioteka {
-    private ArrayList<Uzytkownik> uzytkownicy;
-    private ArrayList<Ksiazka> ksiazki;
+    private CustomArrayList<Uzytkownik> uzytkownicy;
+    private CustomArrayList<Ksiazka> ksiazki;
     private static int nextNumerKarty = 1000;
 
     public Biblioteka() {
-        this.uzytkownicy = new ArrayList<>();
-        this.ksiazki = new ArrayList<>();
+        this.uzytkownicy = new CustomArrayList<>();
+        this.ksiazki = new CustomArrayList<>();
     }
 
-    public List<Ksiazka> getZarezerwowaneKsiazki(String login) {
+    public List<String> getZarezerwowaneKsiazki(String login) {
         Uzytkownik uzytkownik = znajdzUzytkownika(login);
         if (uzytkownik != null) {
             return uzytkownik.getZarezerwowaneKsiazki();
         }
-        return new ArrayList<>();
+        return new CustomArrayList<>();
     }
 
-    public List<Ksiazka> getWypozyczoneKsiazki(String login) {
+    public List<String> getWypozyczoneKsiazki(String login) {
         Uzytkownik uzytkownik = znajdzUzytkownika(login);
         if (uzytkownik != null) {
             return uzytkownik.getWypozyczoneKsiazki();
         }
-        return new ArrayList<>();
+        return new CustomArrayList<>();
     }
 
 
@@ -45,6 +46,18 @@ public class Biblioteka {
 
     public void dodajUzytkownika(String imie, String nazwisko, String haslo, Rola rola) {
         String nrKarty = generujNrKarty();
+        Uzytkownik uzytkownik;
+
+        if (rola == Rola.CZYTELNIK) {
+            uzytkownik = new Czytelnik(imie, nazwisko, nrKarty, haslo);
+        } else {
+            uzytkownik = new Bibliotekarz(imie, nazwisko, nrKarty, haslo);
+        }
+
+        uzytkownicy.add(uzytkownik);
+    }
+
+    public void dodajUzytkownika(String imie, String nazwisko, String nrKarty, String haslo, Rola rola) {
         Uzytkownik uzytkownik;
 
         if (rola == Rola.CZYTELNIK) {
@@ -85,8 +98,8 @@ public class Biblioteka {
 
         if(uzytkownik != null && ksiazka != null) {
             if(ksiazka.getCzydostepna()) {
-                ksiazka.ustawDostepnosc(false, new Date(), false);
-                uzytkownik.wypozyczKsiazke(ksiazka);
+                ksiazka.ustawDostepnosc(false, new Date().toString(), false);
+                uzytkownik.wypozyczKsiazke(tytul);
                 System.out.println("Książka: " + tytul + "została wypożyczona przez użytkownika: " + nrKarty);
                 return true;
             } else {
@@ -104,9 +117,9 @@ public class Biblioteka {
         Ksiazka ksiazka =znajdzKsiazke(tytul);
 
         if(uzytkownik != null && ksiazka != null) {
-            if(uzytkownik.getWypozyczoneKsiazki().contains(ksiazka)) {
+            if(uzytkownik.getWypozyczoneKsiazki().contains(tytul)) {
                 ksiazka.ustawDostepnosc(true, null, false);
-                uzytkownik.getWypozyczoneKsiazki().remove(ksiazka);
+                uzytkownik.getWypozyczoneKsiazki().remove(tytul);
                 System.out.println("Książka: " + tytul + "została zwrócona");
                 return true;
             } else {
@@ -131,12 +144,12 @@ public class Biblioteka {
 
     public boolean zarezerwujKsiazke(String nrKarty, String tytul){
         Uzytkownik uzytkownik = znajdzUzytkownika(nrKarty);
-        Ksiazka ksiazka =znajdzKsiazke(tytul);
+        Ksiazka ksiazka = znajdzKsiazke(tytul);
 
         if (uzytkownik != null && ksiazka != null) {
             if (ksiazka.getCzydostepna() && !ksiazka.getCzyZarezerwowana()) {
                 ksiazka.ustawDostepnosc(true, null, true); // Zmieniamy dostępność na niedostępną
-                uzytkownik.getZarezerwowaneKsiazki().add(ksiazka);
+                uzytkownik.zarezerwujKsiazke(tytul);
                 System.out.println("Książka: " + tytul + " została zarezerwowana przez użytkownika: " + nrKarty);
                 return true;
             } else {
@@ -156,7 +169,7 @@ public class Biblioteka {
         if (uzytkownik != null && ksiazka != null) {
             if (ksiazka.getCzydostepna() && ksiazka.getCzyZarezerwowana()) {
                 ksiazka.ustawDostepnosc(true, null, false); // Zmieniamy dostępność na niedostępną
-                uzytkownik.getZarezerwowaneKsiazki().remove(ksiazka);
+                uzytkownik.getZarezerwowaneKsiazki().remove(tytul);
                 System.out.println("Rezerwacja książki: " + tytul + " została anulowana przez użytkownika: " + nrKarty);
                 return true;
             } else {
@@ -205,8 +218,8 @@ public class Biblioteka {
         }
     }
 
-    public ArrayList<Ksiazka> getKsiazki() { return ksiazki; }
-    public ArrayList<Uzytkownik> getUzytkownicy() { return uzytkownicy; }
+    public CustomArrayList<Ksiazka> getKsiazki() { return ksiazki; }
+    public CustomArrayList<Uzytkownik> getUzytkownicy() { return uzytkownicy; }
     public static int getNextNumerKarty() { return nextNumerKarty; }
 
     public boolean usunUzytkownika(String nrKarty) {
@@ -224,19 +237,19 @@ public class Biblioteka {
 
 
     public static class BibliotekaData {
-        private final ArrayList<Uzytkownik> uzytkownicy;
-        private final ArrayList<Ksiazka> ksiazki;
+        private final CustomArrayList<Uzytkownik> uzytkownicy;
+        private final CustomArrayList<Ksiazka> ksiazki;
         private final int nextNrKarty;
 
-        public BibliotekaData(ArrayList<Uzytkownik> uzytkownicy, ArrayList<Ksiazka> ksiazki, int nextNrKarty) {
+        public BibliotekaData(CustomArrayList<Uzytkownik> uzytkownicy, CustomArrayList<Ksiazka> ksiazki, int nextNrKarty) {
             this.uzytkownicy = uzytkownicy;
             this.ksiazki = ksiazki;
             this.nextNrKarty = nextNrKarty;
         }
 
-        public ArrayList<Uzytkownik> getUzytkownicy() {return uzytkownicy;}
+        public CustomArrayList<Uzytkownik> getUzytkownicy() {return uzytkownicy;}
 
-        public ArrayList<Ksiazka> getKsiazki() {return ksiazki; }
+        public CustomArrayList<Ksiazka> getKsiazki() {return ksiazki; }
 
         public int getNextNrKarty() { return nextNrKarty; }
     }

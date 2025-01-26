@@ -5,6 +5,10 @@ import ProjektPO2.Users.Uzytkownik;
 public class Sesja {
     private static Uzytkownik aktualnyUzytkownik;
 
+    public Sesja(String aktywnyUzytkownik) {
+        aktualnyUzytkownik = new Uzytkownik(aktywnyUzytkownik);
+    }
+
     public static void ustawAktualnegoUzytkownika(Uzytkownik uzytkownik) {
         aktualnyUzytkownik = uzytkownik;
     }

@@ -28,20 +28,20 @@ public class WyswietlUzytkownikowGUI {
         for (Uzytkownik u : biblioteka.getUzytkownicy()) {
             // Zbudowanie listy książek zarezerwowanych w formie nowych linii
             StringBuilder reservedBooksTitles = new StringBuilder();
-            for (Ksiazka ksiazka : u.getZarezerwowaneKsiazki()) {
+            for (String ksiazka : u.getZarezerwowaneKsiazki()) {
                 if (reservedBooksTitles.length() > 0) {
                     reservedBooksTitles.append("\n");
                 }
-                reservedBooksTitles.append(ksiazka.getTytul());
+                reservedBooksTitles.append(ksiazka);
             }
 
             // Zbudowanie listy książek wypożyczonych w formie nowych linii
             StringBuilder borrowedBooksTitles = new StringBuilder();
-            for (Ksiazka ksiazka : u.getWypozyczoneKsiazki()) {
+            for (String ksiazka : u.getWypozyczoneKsiazki()) {
                 if (borrowedBooksTitles.length() > 0) {
                     borrowedBooksTitles.append("\n");
                 }
-                borrowedBooksTitles.append(ksiazka.getTytul());
+                borrowedBooksTitles.append(ksiazka);
             }
 
             // Dodanie wiersza do modelu tabeli

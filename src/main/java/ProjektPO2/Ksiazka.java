@@ -3,13 +3,12 @@ package ProjektPO2;
 import ProjektPO2.Users.Uzytkownik;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class Ksiazka implements Serializable {
     private final String tytul;
     private final String autor;
     private boolean czyDostepna;
-    private Date niedostepnaDo;
+    private String niedostepnaDo;
     private boolean czyZarezerwowana;
     private final String kategoria;
     private Biblioteka biblioteka;
@@ -24,7 +23,7 @@ public class Ksiazka implements Serializable {
         this.kategoria = "";
     }
 
-    public Ksiazka(String tytul, String autor, boolean czyDostepna, Date niedostepnaDo, boolean czyZarezerwowana, String kategoria) {
+    public Ksiazka(String tytul, String autor, boolean czyDostepna, String niedostepnaDo, boolean czyZarezerwowana, String kategoria) {
         this.tytul = tytul;
         this.autor = autor;
         this.czyDostepna = czyDostepna;
@@ -34,14 +33,34 @@ public class Ksiazka implements Serializable {
 
     }
 
+    public Ksiazka(String[] daneZServera) {
+        this.tytul = daneZServera[0];
+        this.autor = daneZServera[1];
+        this.czyDostepna = Boolean.parseBoolean(daneZServera[2]);
+        this.niedostepnaDo = daneZServera[3];
+        this.czyZarezerwowana = Boolean.parseBoolean(daneZServera[4]);
+        this.kategoria = daneZServera[5];
+    }
+
+
+    public Ksiazka(Biblioteka biblioteka, String tytul) {
+        this.biblioteka = biblioteka;
+        this.tytul = tytul;
+        this.autor = biblioteka.znajdzKsiazke(tytul).getAutor();
+        this.czyDostepna = biblioteka.znajdzKsiazke(tytul).getCzydostepna();
+        this.niedostepnaDo = biblioteka.znajdzKsiazke(tytul).getNiedostepnaDo();
+        this.czyZarezerwowana = biblioteka.znajdzKsiazke(tytul).getCzyZarezerwowana();
+        this.kategoria = biblioteka.znajdzKsiazke(tytul).getKategoria();
+    }
+
     public String getTytul() {return tytul;}
     public String getAutor() {return autor;}
     public boolean getCzydostepna() {return czyDostepna;}
-    public Date getNiedostepnaDo() { return niedostepnaDo; }
+    public String getNiedostepnaDo() { return niedostepnaDo; }
     public boolean getCzyZarezerwowana() {return czyZarezerwowana;}
     public String getKategoria() {return kategoria;}
 
-    public void ustawDostepnosc(boolean dostepna, Date dostepnaOd, boolean czyZarezerwowana) {
+    public void ustawDostepnosc(boolean dostepna, String dostepnaOd, boolean czyZarezerwowana) {
         this.czyDostepna = dostepna;
         this.niedostepnaDo = dostepnaOd;
         this.czyZarezerwowana = czyZarezerwowana;
@@ -50,15 +69,12 @@ public class Ksiazka implements Serializable {
 
     @Override
     public String toString(){
-        return "Książka{" +
-                "tytuł:  "+ tytul + '\'' +
-                ", autor: " + autor + '\'' +
-                ", czyDostępna: " + czyDostepna + '\'' +
-                ", niedostepnaDo: " + niedostepnaDo + '\'' +
-                ", czyZarezerwowana: " + czyZarezerwowana + '\'' +
-                ", kategoria: " + kategoria + '\'';
-
-
+        return  tytul +
+                "$" + autor +
+                "$" + czyDostepna +
+                "$" + niedostepnaDo +
+                "$" + czyZarezerwowana +
+                "$" + kategoria;
     }
 
 

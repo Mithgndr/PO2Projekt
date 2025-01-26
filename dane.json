@@ -1,71 +1,16 @@
 {
   "uzytkownicy": [
     {
-      "imie": "Natalia",
-      "nazwisko": "Blach",
+      "imie": "Filip",
+      "nazwisko": "Bednarz",
       "nrKarty": "1000",
       "haslo": "admin",
-      "rola": "BIBLIOTEKARZ",
-      "wypozyczoneKsiazki": [
-        {
-          "tytul": "Baśnie",
-          "autor": "Hans Christian Andersen",
-          "czyDostepna": false,
-          "niedostepnaDo": "Jan 19, 2025, 6:06:55 PM",
-          "czyZarezerwowana": false,
-          "kategoria": "Baśnie"
-        }
-      ],
-      "zarezerwowaneKsiazki": [
-        {
-          "tytul": "Lalka",
-          "autor": "Bolesław Prus",
-          "czyDostepna": true,
-          "czyZarezerwowana": true,
-          "kategoria": "Literatura Piękna"
-        },
-        {
-          "tytul": "Pan Tadeusz",
-          "autor": "Adam Mickiewicz",
-          "czyDostepna": true,
-          "czyZarezerwowana": true,
-          "kategoria": "Literatura Piękna"
-        }
-      ]
-    },
-    {
-      "imie": "Ala",
-      "nazwisko": "Kowalska",
-      "nrKarty": "1001",
-      "haslo": "czytel",
       "rola": "CZYTELNIK",
       "wypozyczoneKsiazki": [
-        {
-          "tytul": "Harry Potter i Kamień Filozoficzny",
-          "autor": "J. K. Rowling",
-          "czyDostepna": false,
-          "niedostepnaDo": "Jan 19, 2025, 6:07:10 PM",
-          "czyZarezerwowana": false,
-          "kategoria": "Fantastyka"
-        }
+        "Lalka"
       ],
-      "zarezerwowaneKsiazki": []
-    },
-    {
-      "imie": "Adam",
-      "nazwisko": "Kowalski",
-      "nrKarty": "1002",
-      "haslo": "admin2",
-      "rola": "BIBLIOTEKARZ",
-      "wypozyczoneKsiazki": [],
       "zarezerwowaneKsiazki": [
-        {
-          "tytul": "Harry Potter i więzień Azkabanu",
-          "autor": "J. K. Rowling",
-          "czyDostepna": true,
-          "czyZarezerwowana": true,
-          "kategoria": "Fantastyka"
-        }
+        "Baśnie"
       ]
     }
   ],
@@ -73,47 +18,25 @@
     {
       "tytul": "Lalka",
       "autor": "Bolesław Prus",
-      "czyDostepna": true,
-      "czyZarezerwowana": true,
+      "czyDostepna": false,
+      "niedostepnaDo": "Sun Jan 26 20:51:36 CET 2025",
+      "czyZarezerwowana": false,
       "kategoria": "Literatura Piękna"
     },
     {
       "tytul": "Pan Tadeusz",
       "autor": "Adam Mickiewicz",
       "czyDostepna": true,
-      "czyZarezerwowana": true,
-      "kategoria": "Literatura Piękna"
+      "czyZarezerwowana": false,
+      "kategoria": "Literatura Piekna"
     },
     {
       "tytul": "Baśnie",
       "autor": "Hans Christian Andersen",
-      "czyDostepna": false,
-      "niedostepnaDo": "Jan 19, 2025, 6:06:55 PM",
-      "czyZarezerwowana": false,
-      "kategoria": "Baśnie"
-    },
-    {
-      "tytul": "Harry Potter i Kamień Filozoficzny",
-      "autor": "J. K. Rowling",
-      "czyDostepna": false,
-      "niedostepnaDo": "Jan 19, 2025, 6:07:10 PM",
-      "czyZarezerwowana": false,
-      "kategoria": "Fantastyka"
-    },
-    {
-      "tytul": "Harry Potter i Komnata Tajemnic",
-      "autor": "J. K. Rowling",
-      "czyDostepna": true,
-      "czyZarezerwowana": false,
-      "kategoria": "Fantastyka"
-    },
-    {
-      "tytul": "Harry Potter i więzień Azkabanu",
-      "autor": "J. K. Rowling",
       "czyDostepna": true,
       "czyZarezerwowana": true,
-      "kategoria": "Fantastyka"
+      "kategoria": "Baśnie"
     }
   ],
-  "nextNrKarty": 1003
+  "nextNrKarty": 1000
 }

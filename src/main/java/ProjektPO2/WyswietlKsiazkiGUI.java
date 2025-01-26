@@ -1,37 +1,57 @@
 package ProjektPO2;
 
+import ProjektPO2.Users.CustomArrayList;
 import ProjektPO2.Users.Uzytkownik;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.List;
+import java.net.*;
 
-public class WyswietlKsiazkiGUI {
+
+public class WyswietlKsiazkiGUI extends LoginGUI {
     private JPanel panel1;
     private JPanel panelMain;
     private JFrame frame;
     private JTable table;
-    private Biblioteka biblioteka;
-    private Uzytkownik uzytkownik;
-    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int screenWidth = screenSize.width;
-    private int screenHight = screenSize.height;
-    private Font font = new Font("Arial", Font.PLAIN, 20);
-    private Font font_bold = new Font("Arial", Font.BOLD, 20);
+    private final Biblioteka biblioteka;
+    private final Uzytkownik uzytkownik;
+    private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private final int screenWidth = screenSize.width;
+    private final int screenHight = screenSize.height;
+    private final Font font = new Font("Arial", Font.PLAIN, 20);
+    private final Font font_bold = new Font("Arial", Font.BOLD, 20);
+    private Socket socket;
+    private BufferedReader in;
+    private PrintWriter out;
 
-    public WyswietlKsiazkiGUI(Biblioteka biblioteka, Uzytkownik uzytkownik) {
+    private static final String SERVER_ADDRESS = "localhost"; // Możesz zmienić na adres IP serwera
+    private static final int SERVER_PORT = 23456;
+
+
+
+    public WyswietlKsiazkiGUI(Biblioteka biblioteka, Uzytkownik uzytkownik) throws IOException {
         this.uzytkownik = uzytkownik;
         this.biblioteka = biblioteka;
-
+        this.socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+        this.out = new PrintWriter(socket.getOutputStream(), true);
+        this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         // Inicjalizacja GUI
         initGUI();
     }
 
     private void initGUI() {
         frame = new JFrame("System Zarządzania Biblioteką");
+
+        if (uzytkownik.getRola().equals(Rola.CZYTELNIK)) {
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
         frame.setSize(screenWidth / 2, screenHight / 2);
         frame.setLocation(screenWidth / 4, screenHight / 4);
         frame.setLayout(new BorderLayout());
@@ -115,12 +135,28 @@ public class WyswietlKsiazkiGUI {
     private void pokazKsiazkiUzytkownika() {
         panelMain.removeAll();
 
+        List<Ksiazka> ksiazki = new CustomArrayList<>();
+
         // Pobierz książki wypożyczone/zarezerwowane przez użytkownika
-        List<Ksiazka> zarezerwowaneKsiazki = biblioteka.getZarezerwowaneKsiazki(uzytkownik.getNrKarty());
-        List<Ksiazka> wypozyczoneKsiazki = biblioteka.getWypozyczoneKsiazki(uzytkownik.getNrKarty());
-        List<Ksiazka> ksiazki = new ArrayList<>();
-        ksiazki.addAll(zarezerwowaneKsiazki);
-        ksiazki.addAll(wypozyczoneKsiazki);
+        List<String> zarezerwowaneKsiazki = uzytkownik.getZarezerwowaneKsiazki();
+        List<String> wypozyczoneKsiazki = uzytkownik.getWypozyczoneKsiazki();
+        System.out.println(zarezerwowaneKsiazki);
+        System.out.println(wypozyczoneKsiazki);
+
+
+        int i = 0, j = 0;
+        while (i < zarezerwowaneKsiazki.size() && zarezerwowaneKsiazki.get(i) != null) {
+            if(zarezerwowaneKsiazki.get(i) != "" && zarezerwowaneKsiazki.get(i) != null)
+                ksiazki.add(new Ksiazka(biblioteka, zarezerwowaneKsiazki.get(i)));
+            i++;
+        }
+
+
+        while (j < wypozyczoneKsiazki.size() && wypozyczoneKsiazki.get(j) != null) {
+            if(wypozyczoneKsiazki.get(j) != "" && wypozyczoneKsiazki.get(j) != null )
+                ksiazki.add(new Ksiazka(biblioteka, wypozyczoneKsiazki.get(j)));
+            j++;
+        }
 
         // Kolumny tabeli
         String[] columnNames = {"Tytuł", "Autor", "Kategoria", "Status", "Oddaj", "Anuluj Rezerwację"};
@@ -169,32 +205,53 @@ public class WyswietlKsiazkiGUI {
         panelMain.repaint();
     }
 
-    private void wykonajAkcje(String akcja, String tytul) {
+    private void wykonajAkcje(String akcja, String tytul) throws IOException {
         String nrKarty = uzytkownik.getNrKarty();
-        boolean success = false;
+        boolean success;
+        String serverResponse;
 
         switch (akcja) {
             case "Rezerwuj":
-                success = biblioteka.zarezerwujKsiazke(nrKarty, tytul);
+                biblioteka.zarezerwujKsiazke(nrKarty, tytul);
+                out.println("RESERVE;" + nrKarty + ";" + tytul);
+                serverResponse = in.readLine();
+                success = "SUCCESS".equalsIgnoreCase(serverResponse);
                 JOptionPane.showMessageDialog(frame, success ? "Książka została zarezerwowana!" : "Nie udało się zarezerwować książki.");
+                super.wczytajKsiazkiUzytkownika(biblioteka, out, in);
                 break;
             case "Wypożycz":
-                success = biblioteka.wypozyczKsiazke(nrKarty, tytul);
+                biblioteka.wypozyczKsiazke(nrKarty, tytul);
+                out.println("BORROW;" + nrKarty + ";" + tytul);
+                serverResponse = in.readLine();
+                success = "SUCCESS".equalsIgnoreCase(serverResponse);
                 JOptionPane.showMessageDialog(frame, success ? "Książka została wypożyczona!" : "Nie udało się wypożyczyć książki.");
+                frame.dispose();
+                super.wczytajKsiazkiUzytkownika(biblioteka, out, in);
                 break;
             case "Oddaj":
-                success = biblioteka.zwrocKsiazke(nrKarty, tytul);
+                biblioteka.zwrocKsiazke(nrKarty, tytul);
+                out.println("RETURN;" + nrKarty + ";" + tytul);
+                serverResponse = in.readLine();
+                success = "SUCCESS".equalsIgnoreCase(serverResponse);
                 JOptionPane.showMessageDialog(frame, success ? "Książka została oddana!" : "Nie udało się oddać książki.");
+                frame.dispose();
+                super.wczytajKsiazkiUzytkownika(biblioteka, out, in);
                 break;
             case "Anuluj":
-                success = biblioteka.anulujRezerwacjeKsiazki(nrKarty, tytul);
+                biblioteka.anulujRezerwacjeKsiazki(nrKarty, tytul);
+                out.println("CANCEL;" + nrKarty + ";" + tytul);
+                serverResponse = in.readLine();
+                success = "SUCCESS".equalsIgnoreCase(serverResponse);
                 JOptionPane.showMessageDialog(frame, success ? "Rezerwacja została anulowana!" : "Nie udało się anulować rezerwacji.");
+                frame.dispose();
+                super.wczytajKsiazkiUzytkownika(biblioteka, out, in);
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + akcja);
         }
-
-        // Zapisz zmiany do pliku
-        biblioteka.zapiszDoPliku("dane.json");
     }
+
+
 
     public class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
@@ -210,9 +267,8 @@ public class WyswietlKsiazkiGUI {
     }
 
     public class ButtonEditor extends DefaultCellEditor {
-        private JButton button;
+        private final JButton button;
         private String label;
-        private boolean isPushed;
 
         public ButtonEditor(JCheckBox checkBox, String defaultLabel) {
             super(checkBox);
@@ -225,13 +281,16 @@ public class WyswietlKsiazkiGUI {
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             label = value == null ? "" : value.toString();
             button.setText(label);
-            isPushed = true;
 
             // Odczyt tytułu książki w wierszu
             String tytul = table.getValueAt(row, 0).toString();
 
             // Wywołanie odpowiedniej akcji
-            wykonajAkcje(label, tytul);
+            try {
+                wykonajAkcje(label, tytul);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             return button;
         }
@@ -243,7 +302,6 @@ public class WyswietlKsiazkiGUI {
 
         @Override
         public boolean stopCellEditing() {
-            isPushed = false;
             return super.stopCellEditing();
         }
 

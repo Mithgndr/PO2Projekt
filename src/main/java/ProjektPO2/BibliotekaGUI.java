@@ -6,6 +6,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class BibliotekaGUI {
 
@@ -21,8 +25,8 @@ public class BibliotekaGUI {
     private int screenWidth = screenSize.width;
     private int screenHight = screenSize.height;
 
+
     public BibliotekaGUI(Uzytkownik uzytkownik) {
-        biblioteka.wczytajZPliku("dane.json");
         initGUI(uzytkownik);
     }
 
@@ -67,7 +71,11 @@ public class BibliotekaGUI {
         btnWyswietlKsiazki.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                WyswietlKsiazkiGUI wyswietlKsiazkiGUI = new WyswietlKsiazkiGUI(biblioteka, uzytkownik);
+                try {
+                    new WyswietlKsiazkiGUI(biblioteka, uzytkownik);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
@@ -221,9 +229,4 @@ public class BibliotekaGUI {
             biblioteka.zapiszDoPliku("dane.json");
         }
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new BibliotekaGUI(new Uzytkownik()).initGUI(new Uzytkownik()));
-    }
-
 }
