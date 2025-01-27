@@ -6,12 +6,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class BibliotekaGUI {
+public class BibliotekaGUI extends LoginGUI{
 
     private JPanel Panel1;
     private JButton btnDodajUzytkownika;
@@ -20,18 +21,28 @@ public class BibliotekaGUI {
     private JButton btnWyswietlKsiazki;
     private JButton btnWyswietlUzytkownikow;
     private Biblioteka biblioteka = new Biblioteka();
-    private Uzytkownik uzytkownik;
-    private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    private int screenWidth = screenSize.width;
-    private int screenHight = screenSize.height;
+    private final Uzytkownik uzytkownik;
+    private final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    private final int screenWidth = screenSize.width;
+    private final int screenHight = screenSize.height;
+    private final PrintWriter out;
+
+    private static final String SERVER_ADDRESS = "localhost"; // Możesz zmienić na adres IP serwera
+    private static final int SERVER_PORT = 23456;
 
 
-    public BibliotekaGUI(Uzytkownik uzytkownik) {
-        initGUI(uzytkownik);
+    public BibliotekaGUI(Biblioteka biblioteka, Uzytkownik uzytkownik) throws IOException {
+        this.uzytkownik = uzytkownik;
+        this.biblioteka = biblioteka;
+        Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+        this.out = new PrintWriter(socket.getOutputStream(), true);
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+        initGUI();
     }
 
 
-    private void initGUI(Uzytkownik uzytkownik) {
+    private void initGUI() {
         JFrame frame = new JFrame("System Zarządzania Biblioteką");
         Font font = new Font("Arial", Font.PLAIN, 20);
         Font font_bold = new Font("Arial", Font.BOLD, 20);
@@ -51,20 +62,38 @@ public class BibliotekaGUI {
         btnDodajUzytkownika.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 dodajUzytkownikaDialog();
+                try {
+                    new BibliotekaGUI(biblioteka, uzytkownik);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
         btnUsunUzytkownika.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 usunUzytkownikaDialog();
+                try {
+                    new BibliotekaGUI(biblioteka, uzytkownik);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
         btnDodajKsiazke.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 dodajKsiazkeDialog();
+                try {
+                    new BibliotekaGUI(biblioteka, uzytkownik);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
@@ -82,8 +111,7 @@ public class BibliotekaGUI {
         btnWyswietlUzytkownikow.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                WyswietlUzytkownikowGUI wyswietlUzytkownikowGUI = new WyswietlUzytkownikowGUI();
-                wyswietlUzytkownikowGUI.wyswietlUzytkownikowGUI(biblioteka);
+                new WyswietlUzytkownikowGUI().wyswietlUzytkownikowGUI(biblioteka);
             }
         });
     }
@@ -120,12 +148,15 @@ public class BibliotekaGUI {
                 return;
             }
             Rola rola = (rolaStr.equals("Czytelnik")) ? Rola.CZYTELNIK : Rola.BIBLIOTEKARZ;
-            biblioteka.dodajUzytkownika(imie, nazwisko, haslo,rola);
+            biblioteka.dodajUzytkownika(imie, nazwisko, haslo, rola);
+            Uzytkownik nowyUzytkownik = biblioteka.getUzytkownicy().getLast();
             JOptionPane.showMessageDialog(null, "Dodano użytkownika!");
             System.out.print("Dodano uzytkownika " + imie +" "+ nazwisko + " z rolą: " + rola + "\n");
+            out.println("ADD_USER;" + nowyUzytkownik.getImie() + ";" + nowyUzytkownik.getNazwisko() + ";" + nowyUzytkownik.getNrKarty() + ";" + nowyUzytkownik.getHaslo() + ";" + nowyUzytkownik.getRola());
         }
-        biblioteka.zapiszDoPliku("dane.json");
     }
+
+
     private void usunUzytkownikaDialog() {
         JTextField nrKartyField = new JTextField();
 
@@ -148,6 +179,7 @@ public class BibliotekaGUI {
             if(biblioteka.usunUzytkownika(nrKarty)) {
                 JOptionPane.showMessageDialog(null, "Usunieto użytkownika!");
                 System.out.print("Usunieto uzytkownika" + nrKarty);
+                out.println("REMOVE;" + nrKarty);
             } else {
                 JOptionPane.showMessageDialog(
                         null,
@@ -157,7 +189,6 @@ public class BibliotekaGUI {
                 );
             }
         }
-        biblioteka.zapiszDoPliku("dane.json");
     }
 
 
@@ -180,53 +211,7 @@ public class BibliotekaGUI {
             Ksiazka ksiazka = new Ksiazka(tytul, autor, true, null, false, kategoria);
             biblioteka.dodajKsiazke(ksiazka);
             JOptionPane.showMessageDialog(null, "Dodano książkę!");
-            biblioteka.zapiszDoPliku("dane.json");
-        }
-    }
-
-    private void wypozyczKsiazkeDialog() {
-        JTextField nrKartyField = new JTextField();
-        JTextField tytulField = new JTextField();
-
-        Object[] fields = {
-                "Numer karty użytkownika:", nrKartyField,
-                "Tytuł książki:", tytulField
-        };
-
-        int option = JOptionPane.showConfirmDialog(null, fields, "Wypożycz książkę", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
-            String nrKarty = nrKartyField.getText();
-            String tytul = tytulField.getText();
-            boolean success = biblioteka.wypozyczKsiazke(nrKarty, tytul);
-            if (success) {
-                JOptionPane.showMessageDialog(null, "Książka wypożyczona!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Nie udało się wypożyczyć książki.");
-            }
-            biblioteka.zapiszDoPliku("dane.json");
-        }
-    }
-
-    private void zwrocKsiazkeDialog() {
-        JTextField nrKartyField = new JTextField();
-        JTextField tytulField = new JTextField();
-
-        Object[] fields = {
-                "Numer karty użytkownika:", nrKartyField,
-                "Tytuł książki:", tytulField
-        };
-
-        int option = JOptionPane.showConfirmDialog(null, fields, "Zwróć książkę", JOptionPane.OK_CANCEL_OPTION);
-        if (option == JOptionPane.OK_OPTION) {
-            String nrKarty = nrKartyField.getText();
-            String tytul = tytulField.getText();
-            boolean success = biblioteka.zwrocKsiazke(nrKarty, tytul);
-            if (success) {
-                JOptionPane.showMessageDialog(null, "Książka zwrócona!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Nie udało się zwrócić książki.");
-            }
-            biblioteka.zapiszDoPliku("dane.json");
+            out.println("ADD_BOOK;" + ksiazka.toString());
         }
     }
 }

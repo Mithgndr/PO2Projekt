@@ -47,6 +47,16 @@ public class Uzytkownik implements Serializable{
         this.zarezerwowaneKsiazki = new CustomArrayList<>();
     }
 
+    public Uzytkownik(Uzytkownik uzytkownik) {
+        this.imie = uzytkownik.getImie();
+        this.nazwisko = uzytkownik.getNazwisko();
+        this.nrKarty = uzytkownik.getNrKarty();
+        this.haslo = uzytkownik.getHaslo();
+        this.rola = uzytkownik.getRola();
+        this.wypozyczoneKsiazki = uzytkownik.wypozyczoneKsiazki;
+        this.zarezerwowaneKsiazki = uzytkownik.zarezerwowaneKsiazki;
+    }
+
     public String getImie() { return imie; }
     public String getNazwisko() { return nazwisko; }
     public String getNrKarty() { return nrKarty; }

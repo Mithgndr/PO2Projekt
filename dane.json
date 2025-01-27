@@ -1,16 +1,26 @@
 {
   "uzytkownicy": [
     {
-      "imie": "Filip",
-      "nazwisko": "Bednarz",
+      "imie": "Natalia",
+      "nazwisko": "Blach",
       "nrKarty": "1000",
       "haslo": "admin",
-      "rola": "CZYTELNIK",
+      "rola": "BIBLIOTEKARZ",
       "wypozyczoneKsiazki": [
-        "Lalka"
+        "Harry Potter i Kamień Filozoficzny"
       ],
+      "zarezerwowaneKsiazki": []
+    },
+    {
+      "imie": "Ala",
+      "nazwisko": "Kowalska",
+      "nrKarty": "1001",
+      "haslo": "admin2",
+      "rola": "CZYTELNIK",
+      "wypozyczoneKsiazki": [],
       "zarezerwowaneKsiazki": [
-        "Baśnie"
+        "Lalka",
+        "Pan Tadeusz"
       ]
     }
   ],
@@ -18,25 +28,32 @@
     {
       "tytul": "Lalka",
       "autor": "Bolesław Prus",
-      "czyDostepna": false,
-      "niedostepnaDo": "Sun Jan 26 20:51:36 CET 2025",
-      "czyZarezerwowana": false,
-      "kategoria": "Literatura Piękna"
+      "czyDostepna": true,
+      "czyZarezerwowana": true,
+      "kategoria": "powieść"
     },
     {
       "tytul": "Pan Tadeusz",
       "autor": "Adam Mickiewicz",
       "czyDostepna": true,
-      "czyZarezerwowana": false,
-      "kategoria": "Literatura Piekna"
+      "czyZarezerwowana": true,
+      "kategoria": "powiesc"
     },
     {
-      "tytul": "Baśnie",
-      "autor": "Hans Christian Andersen",
+      "tytul": "Harry Potter i Kamień Filozoficzny",
+      "autor": "J. K. Rowling",
+      "czyDostepna": false,
+      "niedostepnaDo": "Mon Jan 27 17:37:32 CET 2025",
+      "czyZarezerwowana": false,
+      "kategoria": "Fantastyka"
+    },
+    {
+      "tytul": "Harry Potter i Komnata Tajemnic",
+      "autor": "J. K. Rowling",
       "czyDostepna": true,
-      "czyZarezerwowana": true,
-      "kategoria": "Baśnie"
+      "czyZarezerwowana": false,
+      "kategoria": "Fantastyka"
     }
   ],
-  "nextNrKarty": 1000
+  "nextNrKarty": 1002
 }

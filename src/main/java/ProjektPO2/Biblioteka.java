@@ -23,7 +23,7 @@ public class Biblioteka {
         this.ksiazki = new CustomArrayList<>();
     }
 
-    public List<String> getZarezerwowaneKsiazki(String login) {
+    public CustomArrayList<String> getZarezerwowaneKsiazki(String login) {
         Uzytkownik uzytkownik = znajdzUzytkownika(login);
         if (uzytkownik != null) {
             return uzytkownik.getZarezerwowaneKsiazki();
@@ -31,7 +31,7 @@ public class Biblioteka {
         return new CustomArrayList<>();
     }
 
-    public List<String> getWypozyczoneKsiazki(String login) {
+    public CustomArrayList<String> getWypozyczoneKsiazki(String login) {
         Uzytkownik uzytkownik = znajdzUzytkownika(login);
         if (uzytkownik != null) {
             return uzytkownik.getWypozyczoneKsiazki();
@@ -66,6 +66,10 @@ public class Biblioteka {
             uzytkownik = new Bibliotekarz(imie, nazwisko, nrKarty, haslo);
         }
 
+        uzytkownicy.add(uzytkownik);
+    }
+
+    public void dodajUzytkownika(Uzytkownik uzytkownik) {
         uzytkownicy.add(uzytkownik);
     }
 
@@ -221,6 +225,8 @@ public class Biblioteka {
     public CustomArrayList<Ksiazka> getKsiazki() { return ksiazki; }
     public CustomArrayList<Uzytkownik> getUzytkownicy() { return uzytkownicy; }
     public static int getNextNumerKarty() { return nextNumerKarty; }
+    public static int setNextNumerKarty(int nextNumerKarty) { return Biblioteka.nextNumerKarty = nextNumerKarty; }
+
 
     public boolean usunUzytkownika(String nrKarty) {
         //Aby usunąć admina trzeba go ręcznie usunąć z pliku dane.json

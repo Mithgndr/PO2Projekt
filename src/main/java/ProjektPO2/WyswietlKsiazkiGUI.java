@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.List;
 import java.net.*;
+import java.util.Objects;
 
 
 public class WyswietlKsiazkiGUI extends LoginGUI {
@@ -27,9 +28,8 @@ public class WyswietlKsiazkiGUI extends LoginGUI {
     private final int screenHight = screenSize.height;
     private final Font font = new Font("Arial", Font.PLAIN, 20);
     private final Font font_bold = new Font("Arial", Font.BOLD, 20);
-    private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
+    private final BufferedReader in;
+    private final PrintWriter out;
 
     private static final String SERVER_ADDRESS = "localhost"; // Możesz zmienić na adres IP serwera
     private static final int SERVER_PORT = 23456;
@@ -39,7 +39,7 @@ public class WyswietlKsiazkiGUI extends LoginGUI {
     public WyswietlKsiazkiGUI(Biblioteka biblioteka, Uzytkownik uzytkownik) throws IOException {
         this.uzytkownik = uzytkownik;
         this.biblioteka = biblioteka;
-        this.socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+        Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
         this.out = new PrintWriter(socket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         // Inicjalizacja GUI
@@ -146,14 +146,14 @@ public class WyswietlKsiazkiGUI extends LoginGUI {
 
         int i = 0, j = 0;
         while (i < zarezerwowaneKsiazki.size() && zarezerwowaneKsiazki.get(i) != null) {
-            if(zarezerwowaneKsiazki.get(i) != "" && zarezerwowaneKsiazki.get(i) != null)
+            if(!Objects.equals(zarezerwowaneKsiazki.get(i), "") && zarezerwowaneKsiazki.get(i) != null)
                 ksiazki.add(new Ksiazka(biblioteka, zarezerwowaneKsiazki.get(i)));
             i++;
         }
 
 
         while (j < wypozyczoneKsiazki.size() && wypozyczoneKsiazki.get(j) != null) {
-            if(wypozyczoneKsiazki.get(j) != "" && wypozyczoneKsiazki.get(j) != null )
+            if(!Objects.equals(wypozyczoneKsiazki.get(j), "") && wypozyczoneKsiazki.get(j) != null )
                 ksiazki.add(new Ksiazka(biblioteka, wypozyczoneKsiazki.get(j)));
             j++;
         }
@@ -217,7 +217,7 @@ public class WyswietlKsiazkiGUI extends LoginGUI {
                 serverResponse = in.readLine();
                 success = "SUCCESS".equalsIgnoreCase(serverResponse);
                 JOptionPane.showMessageDialog(frame, success ? "Książka została zarezerwowana!" : "Nie udało się zarezerwować książki.");
-                super.wczytajKsiazkiUzytkownika(biblioteka, out, in);
+                super.wczytajKsiazkiUzytkownika(biblioteka, in);
                 break;
             case "Wypożycz":
                 biblioteka.wypozyczKsiazke(nrKarty, tytul);
@@ -226,7 +226,7 @@ public class WyswietlKsiazkiGUI extends LoginGUI {
                 success = "SUCCESS".equalsIgnoreCase(serverResponse);
                 JOptionPane.showMessageDialog(frame, success ? "Książka została wypożyczona!" : "Nie udało się wypożyczyć książki.");
                 frame.dispose();
-                super.wczytajKsiazkiUzytkownika(biblioteka, out, in);
+                super.wczytajKsiazkiUzytkownika(biblioteka, in);
                 break;
             case "Oddaj":
                 biblioteka.zwrocKsiazke(nrKarty, tytul);
@@ -235,7 +235,7 @@ public class WyswietlKsiazkiGUI extends LoginGUI {
                 success = "SUCCESS".equalsIgnoreCase(serverResponse);
                 JOptionPane.showMessageDialog(frame, success ? "Książka została oddana!" : "Nie udało się oddać książki.");
                 frame.dispose();
-                super.wczytajKsiazkiUzytkownika(biblioteka, out, in);
+                super.wczytajKsiazkiUzytkownika(biblioteka, in);
                 break;
             case "Anuluj":
                 biblioteka.anulujRezerwacjeKsiazki(nrKarty, tytul);
@@ -244,7 +244,7 @@ public class WyswietlKsiazkiGUI extends LoginGUI {
                 success = "SUCCESS".equalsIgnoreCase(serverResponse);
                 JOptionPane.showMessageDialog(frame, success ? "Rezerwacja została anulowana!" : "Nie udało się anulować rezerwacji.");
                 frame.dispose();
-                super.wczytajKsiazkiUzytkownika(biblioteka, out, in);
+                super.wczytajKsiazkiUzytkownika(biblioteka, in);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + akcja);
@@ -274,6 +274,7 @@ public class WyswietlKsiazkiGUI extends LoginGUI {
             super(checkBox);
             button = new JButton();
             button.setOpaque(true);
+            button.setFont(font_bold);
             button.addActionListener(e -> fireEditingStopped());
         }
 

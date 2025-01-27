@@ -83,16 +83,13 @@ public class LoginGUI {
                         String[] responseParts = serverResponse.split(";");
                         String rola = responseParts[1];
 
-                        Uzytkownik aktywnyUzytkownik = new Uzytkownik(loginText);
-
+                        loginFrame.dispose();
                         if ("BIBLIOTEKARZ".equals(rola)) {
-                            loginFrame.dispose();
-                            System.out.println(rola);
-                            //new BibliotekaGUI(aktywnyUzytkownik);
-
+                            bibliotekarzZalogowany(biblioteka, out, in);
+                            Uzytkownik aktywnyUzytkownik = new Uzytkownik(biblioteka.znajdzUzytkownika(loginText));
+                            new BibliotekaGUI(biblioteka, aktywnyUzytkownik);
 
                         } else if ("CZYTELNIK".equals(rola)) {
-                            loginFrame.dispose();
                             czytelnikZalogowany(biblioteka, out, in);
 
                         } else {
@@ -120,7 +117,22 @@ public class LoginGUI {
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
+        loginFrame.dispose();
     }
+
+
+    void bibliotekarzZalogowany(Biblioteka biblioteka, PrintWriter out, BufferedReader in) throws  IOException {
+        wczytajKsiazki(biblioteka, out, in);
+        wczytajUzytkownikow(biblioteka, out, in);
+        Biblioteka.setNextNumerKarty(Integer.parseInt(in.readLine()));
+    }
+
+
+    void czytelnikZalogowany(Biblioteka biblioteka, PrintWriter out, BufferedReader in) throws IOException {
+        wczytajKsiazki(biblioteka, out, in);
+        wczytajKsiazkiUzytkownika(biblioteka, in);
+    }
+
 
     void wczytajKsiazki(Biblioteka biblioteka, PrintWriter out, BufferedReader in) throws  IOException {
         String books = in.readLine();
@@ -136,14 +148,52 @@ public class LoginGUI {
         }
     }
 
-    void czytelnikZalogowany(Biblioteka biblioteka, PrintWriter out, BufferedReader in) throws IOException {
+    void wczytajUzytkownikow(Biblioteka biblioteka, PrintWriter out, BufferedReader in) throws IOException {
+        String users = in.readLine();
+        if (users.startsWith("START_USERS")) {
+            users = in.readLine();
+            while (users != null && !users.equals("END_USERS")) {
+                try {
+                    String[] user = new String[6];
+                    String[] userSplit = users.split("#");
 
-        wczytajKsiazki(biblioteka, out, in);
-        wczytajKsiazkiUzytkownika(biblioteka, out, in);
+                    System.arraycopy(userSplit, 0, user, 0, userSplit.length);
 
+                    Uzytkownik uzytkownik = new Uzytkownik(user);
+
+
+                    int i = 0;
+                    if (user[4] != null && user[4].contains(";")) {
+                        String[] wypozyczoneKsiazkiData = user[4].split(";");
+                        while (i < wypozyczoneKsiazkiData.length) {
+                            uzytkownik.wypozyczKsiazke(wypozyczoneKsiazkiData[i]);
+                            i++;
+                        }
+                    } else if (user[4] != null) {
+                        uzytkownik.wypozyczKsiazke(user[4]);
+                    }
+
+                    i = 0;
+                    if (user[5] != null && user[5].contains(";")) {
+                        String[] zarezerwowaneKsiazkiData = user[5].split(";");
+                        while (i < zarezerwowaneKsiazkiData.length) {
+                            uzytkownik.zarezerwujKsiazke(zarezerwowaneKsiazkiData[i]);
+                            i++;
+                        }
+                    } else if (user[5] != null) {
+                        uzytkownik.zarezerwujKsiazke(user[5]);
+                    }
+
+                    biblioteka.dodajUzytkownika(uzytkownik);
+                    users = in.readLine();
+                } catch (Exception e) {
+                    System.err.println("Nie udało się dodać użytkownika: " + users);
+                }
+            }
+        }
     }
 
-    void wczytajKsiazkiUzytkownika(Biblioteka biblioteka, PrintWriter out, BufferedReader in) throws IOException {
+    void wczytajKsiazkiUzytkownika(Biblioteka biblioteka, BufferedReader in) throws IOException {
         String user = in.readLine();
         if (user.startsWith("START_USER")) {
             String userData0 = user.replace("START_USER~", "");
