@@ -11,7 +11,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.nio.Buffer;
 
 public class LoginGUI {
     private JButton btnLogin;
@@ -20,14 +19,17 @@ public class LoginGUI {
     private JTextField txtLogin;
     private JPasswordField txtPassword;
     private JPanel loginPanel;
+    private JFrame loginFrame;
     private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     private int screenWidth = screenSize.width;
     private int screenHeight = screenSize.height;
 
-    private static final String SERVER_ADDRESS = "localhost"; // Możesz zmienić na adres IP serwera
+    private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 23456;
     private static final int CONNECTION_TIMEOUT = 100000; // Timeout w milisekundach
 
+
+    public JFrame getLoginFrame() { return loginFrame; }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(LoginGUI::new);
@@ -39,7 +41,7 @@ public class LoginGUI {
 
     private void initLoginGUI() {
         Font font = new Font("Arial", Font.BOLD, 24);
-        JFrame loginFrame = new JFrame("System zarządzania biblioteką");
+        loginFrame = new JFrame("System zarządzania biblioteką");
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         loginFrame.setSize(400, 200);
         loginFrame.setLocation(screenWidth / 2 - 200, screenHeight / 2 - 100);
@@ -193,7 +195,7 @@ public class LoginGUI {
         }
     }
 
-    void wczytajKsiazkiUzytkownika(Biblioteka biblioteka, BufferedReader in) throws IOException {
+    public void wczytajKsiazkiUzytkownika(Biblioteka biblioteka, BufferedReader in) throws IOException {
         String user = in.readLine();
         if (user.startsWith("START_USER")) {
             String userData0 = user.replace("START_USER~", "");
@@ -233,14 +235,10 @@ public class LoginGUI {
                 uzytkownik.zarezerwujKsiazke(userData[5]);
             }
 
-            wyswietlKsiazki(biblioteka, uzytkownik);
+            new WyswietlKsiazkiGUI(biblioteka, uzytkownik);
 
         } else if (in.readLine().equals("END_USER")) {
             System.out.println("END_USER");
         }
-    }
-
-    void wyswietlKsiazki(Biblioteka biblioteka, Uzytkownik uzytkownik) throws IOException {
-        new WyswietlKsiazkiGUI(biblioteka, uzytkownik);
     }
 }

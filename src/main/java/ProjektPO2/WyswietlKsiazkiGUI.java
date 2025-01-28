@@ -2,6 +2,7 @@ package ProjektPO2;
 
 import ProjektPO2.Users.CustomArrayList;
 import ProjektPO2.Users.Uzytkownik;
+import ProjektPO2.LoginGUI;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -34,8 +35,6 @@ public class WyswietlKsiazkiGUI extends LoginGUI {
     private static final String SERVER_ADDRESS = "localhost"; // Możesz zmienić na adres IP serwera
     private static final int SERVER_PORT = 23456;
 
-
-
     public WyswietlKsiazkiGUI(Biblioteka biblioteka, Uzytkownik uzytkownik) throws IOException {
         this.uzytkownik = uzytkownik;
         this.biblioteka = biblioteka;
@@ -46,11 +45,17 @@ public class WyswietlKsiazkiGUI extends LoginGUI {
         initGUI();
     }
 
-    private void initGUI() {
+    private void initGUI() throws IOException {
+        getLoginFrame().dispose();
+
         frame = new JFrame("System Zarządzania Biblioteką");
+        frame.setVisible(true);
 
         if (uzytkownik.getRola().equals(Rola.CZYTELNIK)) {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        }
+        if (uzytkownik.getRola().equals(Rola.BIBLIOTEKARZ)) {
+            frame.setAlwaysOnTop(true);
         }
         frame.setSize(screenWidth / 2, screenHight / 2);
         frame.setLocation(screenWidth / 4, screenHight / 4);
@@ -72,11 +77,9 @@ public class WyswietlKsiazkiGUI extends LoginGUI {
 
         frame.add(menuPanel, BorderLayout.NORTH);
 
-        // Panel na tabelę
         panelMain = new JPanel(new BorderLayout());
         frame.add(panelMain, BorderLayout.CENTER);
 
-        // Wyświetl GUI
         frame.setVisible(true);
     }
 
@@ -217,7 +220,7 @@ public class WyswietlKsiazkiGUI extends LoginGUI {
                 serverResponse = in.readLine();
                 success = "SUCCESS".equalsIgnoreCase(serverResponse);
                 JOptionPane.showMessageDialog(frame, success ? "Książka została zarezerwowana!" : "Nie udało się zarezerwować książki.");
-                super.wczytajKsiazkiUzytkownika(biblioteka, in);
+
                 break;
             case "Wypożycz":
                 biblioteka.wypozyczKsiazke(nrKarty, tytul);

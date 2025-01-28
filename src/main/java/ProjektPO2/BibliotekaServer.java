@@ -10,7 +10,7 @@ import java.util.List;
 
 public class BibliotekaServer {
 
-    private static final int PORT = 23456; // Port, na którym serwer będzie nasłuchiwał
+    private static final int PORT = 23456;
     private static CustomArrayList<String> ksiazki = new CustomArrayList<>(); // Prosta baza książek
 
     public static void main(String[] args) {
