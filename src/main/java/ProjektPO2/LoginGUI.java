@@ -11,7 +11,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.nio.Buffer;
 
 public class LoginGUI {
     private JButton btnLogin;
@@ -24,7 +23,7 @@ public class LoginGUI {
     private int screenWidth = screenSize.width;
     private int screenHeight = screenSize.height;
 
-    private static final String SERVER_ADDRESS = "localhost"; // Możesz zmienić na adres IP serwera
+    private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 23456;
     private static final int CONNECTION_TIMEOUT = 100000; // Timeout w milisekundach
 
