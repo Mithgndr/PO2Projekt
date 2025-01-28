@@ -1,39 +1,58 @@
 {
   "uzytkownicy": [
     {
-      "imie": "Filip",
-      "nazwisko": "Bednarz",
+      "imie": "Natalia",
+      "nazwisko": "Blach",
       "nrKarty": "1000",
       "haslo": "admin",
-      "wypozyczoneKsiazki": [],
-      "zarezerwowaneKsiazki": [
-        {
-          "tytul": "Pan Tadeusz",
-          "autor": "Adam Mickiewicz",
-          "czyDostepna": true,
-          "czyZarezerwowana": true,
-          "kategoria": "Poemat",
-          "okladka": ""
-        }
-      ]
+      "rola": "BIBLIOTEKARZ",
+      "wypozyczoneKsiazki": [
+        "Harry Potter i Kamień Filozoficzny"
+      ],
+      "zarezerwowaneKsiazki": []
     },
     {
-      "imie": "Jan",
-      "nazwisko": "Kowalski",
+      "imie": "Ala",
+      "nazwisko": "Kowalska",
       "nrKarty": "1001",
-      "haslo": "Test",
+      "haslo": "admin2",
+      "rola": "CZYTELNIK",
       "wypozyczoneKsiazki": [],
-      "zarezerwowaneKsiazki": []
+      "zarezerwowaneKsiazki": [
+        "Lalka",
+        "Pan Tadeusz"
+      ]
     }
   ],
   "ksiazki": [
+    {
+      "tytul": "Lalka",
+      "autor": "Bolesław Prus",
+      "czyDostepna": true,
+      "czyZarezerwowana": true,
+      "kategoria": "powieść"
+    },
     {
       "tytul": "Pan Tadeusz",
       "autor": "Adam Mickiewicz",
       "czyDostepna": true,
       "czyZarezerwowana": true,
-      "kategoria": "Poemat",
-      "okladka": ""
+      "kategoria": "powiesc"
+    },
+    {
+      "tytul": "Harry Potter i Kamień Filozoficzny",
+      "autor": "J. K. Rowling",
+      "czyDostepna": false,
+      "niedostepnaDo": "Mon Jan 27 17:37:32 CET 2025",
+      "czyZarezerwowana": false,
+      "kategoria": "Fantastyka"
+    },
+    {
+      "tytul": "Harry Potter i Komnata Tajemnic",
+      "autor": "J. K. Rowling",
+      "czyDostepna": true,
+      "czyZarezerwowana": false,
+      "kategoria": "Fantastyka"
     }
   ],
   "nextNrKarty": 1002
